@@ -1,0 +1,18 @@
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io.connect('http://localhost:3000/mail');
+    socket.emit('start', {
+        user: '934657014@qq.com',
+        password: 'umffjousigrgbbhb',
+        host: 'imap.qq.com'
+    })
+    socket.on('mail', function (data) {
+        console.log(data);
+    });
+    socket.on('mailError', function (date) {
+        console.log(date)
+    })
+    socket.on('mailSuccess', function (data) {
+        console.log(data)
+    })
+</script>

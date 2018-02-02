@@ -1,0 +1,14 @@
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io.connect('http://localhost:3000/schedule');
+    socket.emit('start', {
+        thing: '提醒我拿快递',
+        time: 10
+    })
+    socket.on('schedule', function (data) {
+        console.log(data);
+    });
+    socket.on('scheduleSuccess', function (data) {
+        console.log(data)
+    })
+</script>
