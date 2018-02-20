@@ -4,9 +4,9 @@ const { MyChatError } = require('../services/MyChatUtils')
 async function createFriendTable() {
     const sql = `
     CREATE TABLE friends(
-        friendid varchar(255) NOT NULL PRIMARY KEY,
+        friendid varchar(255) NOT NULL,
         roleid varchar(255),
-        attribute varchar(65535),
+        attribute varchar(21844)
     );`;
     const values = [];
     return queryDB(sql, values);

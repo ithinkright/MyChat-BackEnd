@@ -6,7 +6,7 @@ async function createRoleTable() {
     CREATE TABLE roles(
         roleid varchar(255) NOT NULL PRIMARY KEY,
         name varchar(255) NOT NULL unique check(name != ''),
-        description var char(65535) NOT NULL check(Attribute != ''),
+        description varchar(1024) NOT NULL check(description != ''),
         usercount varchar(255) NOT NULL check(usercount != '')
     );`;
     const values = [];

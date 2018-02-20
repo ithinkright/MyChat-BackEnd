@@ -5,7 +5,7 @@ async function createUserFriendTable() {
     const sql = `
     CREATE TABLE user_friends(
         userid varchar(255) NOT NULL PRIMARY KEY,
-        friendid varchar(255) NOT NULL check(friendid != ''),
+        friendid varchar(255) NOT NULL check(friendid != '')
     );`;
     const values = [];
     return queryDB(sql, values);
@@ -15,7 +15,7 @@ async function insertUserFriend(user_friend) {
     const sql = `
     INSERT INTO user_friends (userid, friendid) VALUES (?, ?)
     `;
-    const values = [user.userid, user.friendid];
+    const values = [user_friend.userid, user_friend.friendid];
     return queryDB(sql, values);
 }
 

@@ -6,18 +6,18 @@ async function createAttributeTable() {
     CREATE TABLE attributes(
         attributeid varchar(255) NOT NULL PRIMARY KEY,
         name varchar(255) NOT NULL unique check(username != ''),
-        description varchar(65535) NOT NULL check(password != ''),
+        description varchar(1024) NOT NULL check(password != ''),
         usercount varchar(255)
     );`;
     const values = [];
     return queryDB(sql, values);
 }
 
-async function insertAttribute(atttribute) {
+async function insertAttribute(attribute) {
     const sql = `
-    INSERT INTO arrtibutes (attributeid, name, description, usercount) VALUES (?, ?, ?, ?)
+    INSERT INTO attributes (attributeid, name, description, usercount) VALUES (?, ?, ?, ?)
     `;
-    const values = [atttribute.attributeid, atttribute.name, atttribute.description, description.usercount];
+    const values = [attribute.attributeid, attribute.name, attribute.description, attribute.usercount];
     return queryDB(sql, values);
 }
 
