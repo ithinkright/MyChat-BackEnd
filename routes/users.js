@@ -4,7 +4,7 @@ const { usersCtrl } = require('../controllers')
 const router = new Router({ prefix: '/api/users' });
 
 router.get('/', async function (ctx, next) {
-  ctx.body = 'this is a users/bar response'
+  ctx.body = 'this is a users api route'
 })
 
 router.post('/signin', usersCtrl.signin)
