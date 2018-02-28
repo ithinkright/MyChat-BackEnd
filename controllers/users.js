@@ -10,7 +10,7 @@ async function signup(ctx, next) {
         throw new MyChatError(2, '用户名已存在')
     }
     await usersModel.insertUser(user);
-    sendRes(ctx, { userid: user.userid })
+    sendRes(ctx, user)
     return next()
 }
 
