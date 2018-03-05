@@ -4,7 +4,10 @@ const { MyChatError } = require('../services/MyChatUtils')
 async function createFriendTable() {
     const sql = `
     CREATE TABLE friends(
-        friendid varchar(255) NOT NULL,
+        friendid varchar(255) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        friendname varchar(255) NOT NULL,
+        gender varchar(255) NOT NULL,
+        birth varchar(255) NOT NULL,
         roleid varchar(255),
         attribute varchar(21844)
     );`;
@@ -14,9 +17,9 @@ async function createFriendTable() {
 
 async function insertFriend(friend) {
     const sql = `
-    INSERT INTO friends (friendid, roleid, attribute) VALUES (?, ?, ?)
+    INSERT INTO friends (friendid, friendname, gender, birth, roleid, attribute) VALUES (?, ?, ?, ?, ?, ?)
     `;
-    const values = [friend.friendid, friend.roleid, friend.attribute];
+    const values = [friend.friendid, friend.friendname, friend.gender, friend.gender, friend.birth, friend.roleid, friend.attribute];
     return queryDB(sql, values);
 }
 
@@ -52,9 +55,18 @@ async function findFriendByObj(obj) {
     return queryDB(sql, values);
 }
 
+async function deleteFriend(obj) {
+    const sql = `
+    DELETE FROM friends WHERE friends.friendid = (?)
+    `;
+    const values = [obj.friendid];
+    return queryDB(sql, values);
+}
+
 exports = module.exports = {
     createFriendTable,
     insertFriend,
     findFriendById,
-    findFriendByObj
+    findFriendByObj,
+    deleteFriend
 }

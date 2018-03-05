@@ -51,9 +51,18 @@ async function findUserFriendByObj(obj) {
     return queryDB(sql, values);
 }
 
+async function deleteFriend(obj) {
+    const sql = `
+    DELETE FROM user_friends WHERE user_friends.friendid = (?)
+    `
+    const values = [obj.friendid];
+    return queryDB(sql, values);
+}
+
 exports = module.exports = {
     createUserFriendTable,
     insertUserFriend,
     findUserFriendById,
-    findUserFriendByObj
+    findUserFriendByObj,
+    deleteFriend
 }

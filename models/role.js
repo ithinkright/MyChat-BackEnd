@@ -7,6 +7,7 @@ async function createRoleTable() {
         roleid varchar(255) NOT NULL PRIMARY KEY,
         name varchar(255) NOT NULL unique check(name != ''),
         description varchar(1024) NOT NULL check(description != ''),
+        attribute varchar(21844) NOT NULL check(attribute != ''),
         usercount varchar(255) NOT NULL check(usercount != '')
     );`;
     const values = [];
@@ -15,9 +16,9 @@ async function createRoleTable() {
 
 async function insertRole(role) {
     const sql = `
-    INSERT INTO roles (roleid, name, description, usercount) VALUES (?, ?, ?, ?)
+    INSERT INTO roles (roleid, name, description, attribute, usercount) VALUES (?, ?, ?, ?, ?)
     `;
-    const values = [role.roleid, role.name, role.description, role.usercount];
+    const values = [role.roleid, role.name, role.description, role.attribute, role.usercount];
     return queryDB(sql, values);
 }
 
@@ -53,9 +54,18 @@ async function findRoleByObj(obj) {
     return queryDB(sql, values);
 }
 
+async function deleteRole(obj) {
+    const sql = `
+    DELETE FROM roles WHERE roles.roleid = (?)
+    `;
+    const values = [obj.roleid];
+    return queryDB(sql, values)
+}
+
 exports = module.exports = {
     createRoleTable,
     insertRole,
     findRoleById,
-    findRoleByObj
+    findRoleByObj,
+    deleteRole
 }

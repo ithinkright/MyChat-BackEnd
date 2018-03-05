@@ -53,9 +53,39 @@ async function findAttributeByObj(obj) {
     return queryDB(sql, values);
 }
 
+async function deleteAttributeById(obj) {
+    const sql = `
+    DELETE FROM attributes WHERE attributes.attributeid = (?)
+    `
+    const values = [obj.attributeid];
+    return queryDB(sql, values);
+}
+
+async function deleteAttributeByObj(obj) {
+    let condition = '';
+    let flag = true;
+    let values = [];
+    for (let key in obj) {
+        if (flag) {
+          condition += `attributes.${key} = ?`;
+          flag = false;
+        } else {
+          condition += ` AND attributes.${key} = ?`
+        }
+        values.push(obj[key])
+    }
+    const sql = `
+        DELETE FROM attributes
+        WHERE ${condition}
+    `;
+    return queryDB(sql, values);
+}
+
 exports = module.exports = {
     createAttributeTable,
     insertAttribute,
     findAttributeById,
-    findAttributeByObj
+    findAttributeByObj,
+    deleteAttributeById,
+    deleteAttributeByObj
 }
