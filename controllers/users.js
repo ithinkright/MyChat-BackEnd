@@ -1,6 +1,23 @@
 const { usersModel } = require('../models')
 const { MyChatError, pick, sendRes } = require('../services/MyChatUtils/')
+const fs = require('fs');
 const md5 = require('md5')
+
+async function uploadAvatar(ctx, next) {
+    ctx.param = Object.assign(ctx.param, ctx.req.body);
+    let res = pick(ctx.param, ['userid']);
+    let avatarPath = `public/avatar/${res.userid}.jpg`;
+    let oldPath = ctx.req.file.path;
+    console.log(fs.existsSync(oldPath))
+    console.log(ctx.req.file);
+    try {
+        fs.renameSync(oldPath, avatarPath);
+        sendRes(ctx)
+    } catch (e) {
+        throw new MyChatError(2, "头像上传失败");
+    }
+    return next();
+}
 
 async function signup(ctx, next) {
     let user = pick(ctx.param, ['username', 'password']);
@@ -10,6 +27,12 @@ async function signup(ctx, next) {
         throw new MyChatError(2, '用户名已存在')
     }
     await usersModel.insertUser(user);
+    let avatarPath = `public/avatar/${user.userid}.jpg`;
+    try {
+        fs.copyFileSync("public/images/default.png", avatarPath);
+    } catch (e) {
+        console.log(e);
+    }
     sendRes(ctx, user)
     return next()
 }
@@ -27,7 +50,9 @@ async function signin(ctx, next) {
     return next()
 }
 
+
 exports = module.exports = {
     signup,
-    signin
+    signin,
+    uploadAvatar
 }
