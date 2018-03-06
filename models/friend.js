@@ -4,12 +4,12 @@ const { MyChatError } = require('../services/MyChatUtils')
 async function createFriendTable() {
     const sql = `
     CREATE TABLE friends(
-        friendid varchar(255) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        friendid int NOT NULL PRIMARY KEY AUTO_INCREMENT,
         friendname varchar(255) NOT NULL,
         gender varchar(255) NOT NULL,
         birth varchar(255) NOT NULL,
         roleid varchar(255),
-        attribute varchar(21844)
+        attribute varchar(20000)
     );`;
     const values = [];
     return queryDB(sql, values);
@@ -30,7 +30,7 @@ async function findFriendById(obj) {
     WHERE friends.friendid = (?)
     `;
     const values = [obj.friendid];
-    return queryDB(sql, values)
+    return queryDB(sql, values);
 }
 
 //根据某些字段查询好友(AND)
@@ -53,6 +53,23 @@ async function findFriendByObj(obj) {
         WHERE ${condition}
     `;
     return queryDB(sql, values);
+}
+
+async function addFriendAttribute(obj) {
+    let friend = findFriendById({obj.friendid});
+    let attribute = friend.attribute;
+    if (attribute.length === 0) {
+      attribute = obj.attributeid;
+    }
+    else {
+      attribute += "," + obj.attributeid;
+    }
+    const sql = `
+        UPDATE friends
+        SET friends.attribute = ${attribute}
+        WHERE friends.friendid = (?)
+    `;
+    return queryDB(sql, [friend.friendid]);
 }
 
 async function deleteFriend(obj) {
