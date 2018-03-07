@@ -22,8 +22,7 @@ async function tranlate(obj) {
         to: obj.to,
         sign: sign
     };
-    console.log(data);
-    axios({
+    let result = await axios({
         url: 'http://openapi.youdao.com/api',
         method: 'post',
         data: data,
@@ -38,10 +37,13 @@ async function tranlate(obj) {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-    }).then(function (res) {
-        console.log(res.data)
     })
+    return result.data;
 }
 
-//tranlate(test);
+// async function mytest() {
+//     let result = await tranlate(test);
+//     console.log(result)
+// }
+// mytest()
 exports = module.exports = tranlate;
