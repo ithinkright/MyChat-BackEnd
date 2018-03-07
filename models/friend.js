@@ -36,7 +36,7 @@ async function insertFriend(friend) {
     const sql = `
     INSERT INTO friends (friendid, friendname, gender, birth, roleid, attribute) VALUES (?, ?, ?, ?, ?, ?)
     `;
-    const values = [friend.friendid, friend.friendname, friend.gender, friend.gender, friend.birth, friend.roleid, friend.attribute];
+    const values = [friend.friendid, friend.friendname, friend.gender, friend.birth, friend.roleid, friend.attribute];
     return queryDB(sql, values);
 }
 
@@ -72,6 +72,24 @@ async function findFriendByObj(obj) {
     return queryDB(sql, values);
 }
 
+async function assignRole(obj) {
+    const sql = `
+        UPDATE friends
+        SET friends.roleid = ${obj.roleid}
+        WHERE friends.friendid = (?)
+    `;
+    return queryDB(sql, [obj.friendid]);
+}
+
+async function removeRole(obj) {
+    const sql = `
+        UPDATE friends
+        SET friends.roleid = null
+        WHERE friends.friends = (?)
+    `;
+    return queryDB(sql, [obj.friendid]);
+}
+
 async function addFriendAttribute(obj) {
     let friend = findFriendById({ friendid: obj.friendid });
     let attribute = friend.attribute;
@@ -92,9 +110,16 @@ async function addFriendAttribute(obj) {
 async function deleteFriendAttribute(obj) {
     let friend = findFriendById({ friendid: obj.friendid });
     let attribute = friend.attribute;
-    let pos = attribute.search(obj.attributeid);
-    let words = attribute.split(obj.attributeid);
-    let newAttribute = words[0] + words[1];
+    let array = []
+    attribute.split(obj.attributeid).forEach(function(item) {
+        if (item.length != 0) {
+            if (item[0] === ",")
+                array.push(item.slice(1, item.length));
+            if (item[item.length-1] === ",")
+                array.push(item.slice(0, item.length-1));
+        }
+    });
+    let newAttribute = array.join(',');
     const sql = `
         UPDATE friends
         SET friends.attribute = ${newAttribute}
