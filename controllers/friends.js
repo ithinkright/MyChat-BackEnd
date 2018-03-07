@@ -36,7 +36,47 @@ async function deleteFriend(ctx, next) {
     return next()
 }
 
+async function getFriends(ctx, next) {
+    sendRes(ctx, {data});
+}
+
 exports = module.exports = {
     addFriend,
-    deleteFriend
+    deleteFriend,
+    getFriends
 }
+
+data = [
+  {
+      friendid: 1,
+      friendname: "computer",
+      gender: "male",
+      birth: "20170908",
+      roleid: "1",
+      attribute: "compute"
+  },
+  {
+      friendid: 2,
+      friendname: "translator",
+      gender: "female",
+      birth: "20090908",
+      roleid: "2",
+      attribute: "translate"
+  },
+  {
+      friendid: 3,
+      friendname: "Email",
+      gender: "female",
+      birth: "20030101",
+      roleid: "3",
+      attribute: "email"
+  },
+  {
+      friendid: 4,
+      friendname: "Secure",
+      gender: "female",
+      birth: "20180308",
+      roleid: "4",
+      attribute: "sex"
+  }
+]
