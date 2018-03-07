@@ -63,3 +63,48 @@
         "message": "用户名不存在 or 密码错误"
     }
     ```  
+
+
+#### Friends
+#### Add friend
++ POST /api/friends
++ request
+    ```
+    {
+	    "userid": "1",              // required
+	    "friendname": "weilinmumu"  // required
+      "gender": "male"            // required
+      "birth": "20170908" (暂时没做规定，后面再商量格式)   // required
+      "roleid": "1"               // option
+    }
+    ```
++ response
+  + success example
+    ```
+    {
+        "userid": "1",
+        "friendname": "weilinmumu",
+        "gender": "male,
+        "birth": "20170908",
+        "friendid": 13,  (自增长)
+        "code": 0,
+        "message": "ok"
+    }
+    ```
+#### Delete friend
++ DELETE /api/friends
++ request
+    ```
+    {
+      "friendid": "1",              // required
+    }
+    ```
++ response
+  + success example
+    ```
+    {
+        "mes": "DELETE SUCCESSFULLY",
+        "code": 0,
+        "message": "ok"
+    }
+    ```  
