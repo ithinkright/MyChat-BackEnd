@@ -64,6 +64,17 @@
     }
     ```  
 
+#### upload
++ POST /api/users/upload
++ request 这里注意一下，因为涉及文件+文本，所以格式为form-data格式，不再是json
+    ```
+    {
+	    "userid": "32位的userid", //required
+	    "avatar": 文件 //required
+    }
+    ```
+
++ GET /avatar/userid.jpg 为头像url
 
 #### Friends
 #### Add friend
