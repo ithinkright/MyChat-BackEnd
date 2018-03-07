@@ -7,8 +7,8 @@ router.get('/', async function (ctx, next) {
   ctx.body = 'this is a friends api route'
 })
 
-router.get('/add', friendCtrl.addFriend)
+router.post('/', friendCtrl.addFriend)
 
 
-router.get('/delete', friendCtrl.deleteFriend)
+router.delete('/', friendCtrl.deleteFriend)
 exports = module.exports = router
