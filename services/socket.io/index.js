@@ -11,13 +11,13 @@ let test = {
 socketio.setSocket = function (server) {
     io.attach(server);
     io.of('/schedule').on('connection', function (socket) {
-        socket.emit('scheduleSuccess', {
-            mes: '日程创建成功'
-        })
         socket.on('start', function (data) {
             setTimeout(function () {
                 socket.emit('schedule', { thing: data.thing })
-            }, data.time * 1000)
+            }, data.time * 1000);
+            socket.emit('scheduleSuccess', {
+                mes: '日程创建成功'
+            })
         })
     })
     io.of('/mail').on('connection', function (socket) {
