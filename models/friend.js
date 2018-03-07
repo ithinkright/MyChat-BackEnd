@@ -2,6 +2,8 @@ const queryDB = require('../services/db')
 const { MyChatError } = require('../services/MyChatUtils')
 
 async function createFriendTable() {
+    if (showTable())
+        return;
     const sql = `
     CREATE TABLE friends(
         friendid int NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -13,6 +15,21 @@ async function createFriendTable() {
     );`;
     const values = [];
     return queryDB(sql, values);
+}
+
+async function showTable() {
+    const sql = `
+        show tables like 'friends'
+    `;
+    let flag = true;
+    await queryDB(sql, []).then(function(res) {
+        if (res.length === 0)
+            flag = false;
+    });
+    if (flag) {
+      console.log("friends table exits")
+    }
+    return flag;
 }
 
 async function insertFriend(friend) {
@@ -56,7 +73,7 @@ async function findFriendByObj(obj) {
 }
 
 async function addFriendAttribute(obj) {
-    let friend = findFriendById({obj.friendid});
+    let friend = findFriendById({ friendid: obj.friendid });
     let attribute = friend.attribute;
     if (attribute.length === 0) {
       attribute = obj.attributeid;
@@ -67,6 +84,20 @@ async function addFriendAttribute(obj) {
     const sql = `
         UPDATE friends
         SET friends.attribute = ${attribute}
+        WHERE friends.friendid = (?)
+    `;
+    return queryDB(sql, [friend.friendid]);
+}
+
+async function deleteFriendAttribute(obj) {
+    let friend = findFriendById({ friendid: obj.friendid });
+    let attribute = friend.attribute;
+    let pos = attribute.search(obj.attributeid);
+    let words = attribute.split(obj.attributeid);
+    let newAttribute = words[0] + words[1];
+    const sql = `
+        UPDATE friends
+        SET friends.attribute = ${newAttribute}
         WHERE friends.friendid = (?)
     `;
     return queryDB(sql, [friend.friendid]);

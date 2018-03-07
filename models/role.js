@@ -2,6 +2,8 @@ const queryDB = require('../services/db')
 const { MyChatError } = require('../services/MyChatUtils')
 
 async function createRoleTable() {
+    if (showTable())
+        return;
     const sql = `
     CREATE TABLE roles(
         roleid varchar(255) NOT NULL PRIMARY KEY,
@@ -12,6 +14,21 @@ async function createRoleTable() {
     );`;
     const values = [];
     return queryDB(sql, values);
+}
+
+async function showTable() {
+    const sql = `
+        show tables like 'roles'
+    `;
+    let flag = true;
+    await queryDB(sql, []).then(function(res) {
+        if (res.length === 0)
+            flag = false;
+    });
+    if (flag) {
+      console.log("roles table exits")
+    }
+    return flag;
 }
 
 async function insertRole(role) {

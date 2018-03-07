@@ -2,6 +2,8 @@ const queryDB = require('../services/db')
 const { MyChatError } = require('../services/MyChatUtils')
 
 async function createAttributeTable() {
+    if (showTable())
+        return;
     const sql = `
     CREATE TABLE attributes(
         attributeid varchar(255) NOT NULL PRIMARY KEY,
@@ -11,6 +13,21 @@ async function createAttributeTable() {
     );`;
     const values = [];
     return queryDB(sql, values);
+}
+
+async function showTable() {
+    const sql = `
+        show tables like 'attributes'
+    `;
+    let flag = true;
+    await queryDB(sql, []).then(function(res) {
+        if (res.length === 0)
+            flag = false;
+    });
+    if (flag) {
+      console.log("attributes table exits")
+    }
+    return flag;
 }
 
 async function insertAttribute(attribute) {
@@ -23,9 +40,9 @@ async function insertAttribute(attribute) {
 
 async function findAttributeById(obj) {
     const sql = `
-    SELECT *
-    FROM attributes
-    WHERE attributes.attributeid = (?)
+        SELECT *
+        FROM attributes
+        WHERE attributes.attributeid = (?)
     `;
     const values = [obj.attributeid];
     return queryDB(sql, values)

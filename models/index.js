@@ -4,5 +4,5 @@ exports = module.exports = {
     friendModel: require('./friend'),
     roleModel: require('./role'),
     user_friendModel: require('./user_friend'),
-    users_attribute: require('./users_attribute')
+    users_attributeModel: require('./users_attribute')
 }

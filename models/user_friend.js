@@ -2,6 +2,8 @@ const queryDB = require('../services/db')
 const { MyChatError } = require('../services/MyChatUtils')
 
 async function createUserFriendTable() {
+    if (showTable())
+        return;
     const sql = `
     CREATE TABLE user_friends(
         userid varchar(255) NOT NULL PRIMARY KEY,
@@ -9,6 +11,21 @@ async function createUserFriendTable() {
     );`;
     const values = [];
     return queryDB(sql, values);
+}
+
+async function showTable() {
+    const sql = `
+        show tables like 'user_friends'
+    `;
+    let flag = true;
+    await queryDB(sql, []).then(function(res) {
+        if (res.length === 0)
+            flag = false;
+    });
+    if (flag) {
+      console.log("user_friend table exits")
+    }
+    return flag;
 }
 
 async function insertUserFriend(user_friend) {

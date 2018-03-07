@@ -4,6 +4,8 @@ const queryDB = require('../services/db')
 const { MyChatError } = require('../services/MyChatUtils')
 
 async function createUsersAttributeTable() {
+    if (showTable())
+        return;
     const sql = `
     CREATE TABLE users_attribute(
         userid varchar(255) NOT NULL,
@@ -11,6 +13,21 @@ async function createUsersAttributeTable() {
     );`;
     const values = [];
     return queryDB(sql, values);
+}
+
+async function showTable() {
+    const sql = `
+        show tables like 'users_attribute'
+    `;
+    let flag = true;
+    await queryDB(sql, []).then(function(res) {
+        if (res.length === 0)
+            flag = false;
+    });
+    if (flag) {
+      console.log("users_attribute table exits")
+    }
+    return flag;
 }
 
 async function insertUsersAttribute(users_attribute) {
@@ -70,9 +87,10 @@ async function deleteUsersAttributeByAttributeId(obj) {
 }
 
 exports = module.exports = {
-    createRoleTable,
-    insertRole,
-    findRoleById,
-    findRoleByObj,
-    deleteRole
+    createUsersAttributeTable,
+    insertUsersAttribute,
+    findUsersAttributeById,
+    findUsersAttributeByObj,
+    deleteUsersAttributeByUserId,
+    deleteUsersAttributeByAttributeId
 }

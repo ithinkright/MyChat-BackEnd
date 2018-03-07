@@ -2,6 +2,8 @@ const queryDB = require('../services/db')
 const { MyChatError } = require('../services/MyChatUtils')
 
 async function createUserTable() {
+    if (showTable())
+        return;
     const sql = `
     CREATE TABLE users(
         userid varchar(255) NOT NULL PRIMARY KEY,
@@ -10,6 +12,21 @@ async function createUserTable() {
     );`;
     const values = [];
     return queryDB(sql, values);
+}
+
+async function showTable() {
+    const sql = `
+        show tables like 'users'
+    `;
+    let flag = true;
+    await queryDB(sql, []).then(function(res) {
+        if (res.length === 0)
+            flag = false;
+    });
+    if (flag) {
+      console.log("users table exits")
+    }
+    return flag;
 }
 
 async function insertUser(user) {
@@ -45,7 +62,7 @@ async function findUserByObj(obj) {
         values.push(obj[key])
     }
     const sql = `
-        SELECT * 
+        SELECT *
         FROM users
         WHERE ${condition}
     `;
@@ -55,6 +72,7 @@ async function findUserByObj(obj) {
 exports = module.exports = {
     createUserTable,
     insertUser,
+    showTable,
     findUserById,
     findUserByObj
 }
