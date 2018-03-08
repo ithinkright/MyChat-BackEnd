@@ -76,46 +76,28 @@
 
 + GET /avatar/userid.jpg 为头像url
 
-#### Friends
-#### Add friend
-+ POST /api/friends
+#### Deal Message
++ POST /api/dealMessage
 + request
     ```
     {
-	    "userid": "1",              // required
-	    "friendname": "weilinmumu"  // required
-      "gender": "male"            // required
-      "birth": "20170908" (暂时没做规定，后面再商量格式)   // required
-      "roleid": "1"               // option
+	    "friendid": "1",              // required
+	    "mes": "1*3*2"  // required
     }
     ```
 + response
   + success example
     ```
     {
-        "userid": "1",
-        "friendname": "weilinmumu",
-        "gender": "male,
-        "birth": "20170908",
-        "friendid": 13,  (自增长)
+        "result": 6,
         "code": 0,
         "message": "ok"
     }
     ```
-#### Delete friend
-+ DELETE /api/friends
-+ request
+    + failed example
     ```
     {
-      "friendid": "1",              // required
-    }
-    ```
-+ response
-  + success example
-    ```
-    {
-        "mes": "DELETE SUCCESSFULLY",
+        "result": "更多功能敬请期待！",
         "code": 0,
         "message": "ok"
-    }
-    ```  
+    }    ```
