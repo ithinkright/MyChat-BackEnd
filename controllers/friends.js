@@ -51,9 +51,11 @@ async function getFriends(ctx, next) {
 
 async function getOriginFrends(userid) {
     let data = friendsData.data;
+    console.log(data)
     for (e in data) {
           data[e].userid = userid;
           await setAttribute(data[e]);
+          data[e].friendid = undefined;
           console.log(data[e]);
           await insertFriends(data[e]);
     }
