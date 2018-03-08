@@ -2,7 +2,7 @@ const queryDB = require('../services/db')
 const { MyChatError } = require('../services/MyChatUtils')
 
 async function createRoleTable() {
-    if (showTable())
+    if (await showTable())
         return;
     const sql = `
     CREATE TABLE roles(

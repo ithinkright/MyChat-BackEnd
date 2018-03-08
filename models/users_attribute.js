@@ -4,7 +4,7 @@ const queryDB = require('../services/db')
 const { MyChatError } = require('../services/MyChatUtils')
 
 async function createUsersAttributeTable() {
-    if (showTable())
+    if (await showTable())
         return;
     const sql = `
     CREATE TABLE users_attribute(

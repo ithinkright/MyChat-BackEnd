@@ -2,7 +2,7 @@ const queryDB = require('../services/db')
 const { MyChatError } = require('../services/MyChatUtils')
 
 async function createFriendTable() {
-    if (showTable())
+    if (await showTable())
         return;
     const sql = `
     CREATE TABLE friends(
@@ -85,30 +85,31 @@ async function removeRole(obj) {
     const sql = `
         UPDATE friends
         SET friends.roleid = null
-        WHERE friends.friends = (?)
+        WHERE friends.friendid = (?)
     `;
     return queryDB(sql, [obj.friendid]);
 }
 
 async function addFriendAttribute(obj) {
-    let friend = findFriendById({ friendid: obj.friendid });
+    let [friend] = await findFriendById({ friendid: obj.friendid });
     let attribute = friend.attribute;
-    if (attribute.length === 0) {
+    if (!attribute) {
       attribute = obj.attributeid;
     }
     else {
       attribute += "," + obj.attributeid;
     }
+    attribute = "abcd";
     const sql = `
         UPDATE friends
-        SET friends.attribute = ${attribute}
+        SET friends.attribute = (?)
         WHERE friends.friendid = (?)
     `;
-    return queryDB(sql, [friend.friendid]);
+    return queryDB(sql, [attribute, friend.friendid]);
 }
 
 async function deleteFriendAttribute(obj) {
-    let friend = findFriendById({ friendid: obj.friendid });
+    let [friend] = await findFriendById({ friendid: obj.friendid });
     let attribute = friend.attribute;
     let array = []
     attribute.split(obj.attributeid).forEach(function(item) {
@@ -122,10 +123,10 @@ async function deleteFriendAttribute(obj) {
     let newAttribute = array.join(',');
     const sql = `
         UPDATE friends
-        SET friends.attribute = ${newAttribute}
+        SET friends.attribute = (?)
         WHERE friends.friendid = (?)
     `;
-    return queryDB(sql, [friend.friendid]);
+    return queryDB(sql, [newAttribute, friend.friendid]);
 }
 
 async function deleteFriend(obj) {
@@ -141,5 +142,9 @@ exports = module.exports = {
     insertFriend,
     findFriendById,
     findFriendByObj,
+    assignRole,
+    removeRole,
+    addFriendAttribute,
+    deleteFriendAttribute,
     deleteFriend
 }

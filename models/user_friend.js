@@ -2,12 +2,12 @@ const queryDB = require('../services/db')
 const { MyChatError } = require('../services/MyChatUtils')
 
 async function createUserFriendTable() {
-    if (showTable())
+    if (await showTable())
         return;
     const sql = `
     CREATE TABLE user_friends(
-        userid varchar(255) NOT NULL PRIMARY KEY,
-        friendid varchar(255) NOT NULL check(friendid != '')
+        userid varchar(255) NOT NULL,
+        friendid int NOT NULL
     );`;
     const values = [];
     return queryDB(sql, values);
