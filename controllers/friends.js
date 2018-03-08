@@ -1,4 +1,4 @@
-const { usersModel, friendModel, roleModel, user_friendModel } = require('../models')
+const { usersModel, friendModel, roleModel, user_friendModel, attributeModel } = require('../models')
 const { MyChatError, pick, sendRes } = require('../services/MyChatUtils/')
 const { friendsData } = require('../data');
 
@@ -38,9 +38,13 @@ async function getFriends(ctx, next) {
     console.log(user_friend);
     let result = [];
     for (let i in user_friend) {
-        let friend = await friendModel.findFriendById({ friendid: user_friend[i].friendid });
+        let [friend] = await friendModel.findFriendById({ friendid: user_friend[i].friendid });
+        let [attribute] = await attributeModel.findAttributeById({ attributeid: friend.attribute });
+        let [role] = await roleModel.findRoleById({ roleid: friend.roleid });
+        friend.attributename = attribute.name;
+        friend.rolename = role.name;
         result.push(friend);
-      }
+    }
     sendRes(ctx, {data: result});
     return next();
 }
