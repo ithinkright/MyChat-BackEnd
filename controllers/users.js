@@ -1,4 +1,5 @@
 const { usersModel } = require('../models')
+const { getOriginFrends } = require('./friends')
 const { MyChatError, pick, sendRes } = require('../services/MyChatUtils/')
 const fs = require('fs');
 const md5 = require('md5')
@@ -27,6 +28,7 @@ async function signup(ctx, next) {
         throw new MyChatError(2, '用户名已存在')
     }
     await usersModel.insertUser(user);
+    await getOriginFrends(user.userid);
     let avatarPath = `public/avatar/${user.userid}.jpg`;
     try {
         fs.copyFileSync("public/images/default.png", avatarPath);
