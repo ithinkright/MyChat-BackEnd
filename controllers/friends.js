@@ -32,6 +32,19 @@ async function deleteFriend(ctx, next) {
     return next()
 }
 
+async function getFriends(ctx, next) {
+    let user = pick(ctx.param, ['userid']);
+    let user_friend = await user_friendModel.findUserFriendByObj(user);
+    console.log(user_friend);
+    let result = [];
+    for (let i in user_friend) {
+        let friend = await friendModel.findFriendById({ friendid: user_friend[i].friendid });
+        result.push(friend);
+      }
+    sendRes(ctx, {data: result});
+    return next();
+}
+
 async function getOriginFrends(userid) {
     let data = friendsData.data;
     for (e in data) {
@@ -40,10 +53,6 @@ async function getOriginFrends(userid) {
           console.log(data[e]);
           await insertFriends(data[e]);
     }
-}
-
-async function getFriends(ctx, next) {
-    sendRes(ctx, {friendsData});
 }
 
 async function insertFriends(friend) {
