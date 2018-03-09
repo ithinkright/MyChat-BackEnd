@@ -76,10 +76,18 @@ async function deleteFriend(obj) {
     return queryDB(sql, values);
 }
 
+async function clear() {
+    const sql = `
+      truncate user_friends
+    `;
+    return queryDB(sql, []);
+}
+
 exports = module.exports = {
     createUserFriendTable,
     insertUserFriend,
     findUserFriendById,
     findUserFriendByObj,
-    deleteFriend
+    deleteFriend,
+    clear
 }

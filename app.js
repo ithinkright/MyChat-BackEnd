@@ -24,6 +24,9 @@ const { getOriginFrends } = require('./controllers/friends');
     server.listen(3000);
     console.log(`服务端程序正在监听3000端口`);
     await createDataBase();
+    await usersModel.clear();
+    await friendModel.clear();
+    await user_friendModel.clear();
     //await getOriginFrends("21633e8138c5669902a4bed40ec6516b");
     //await testSql();
   } catch (err) {

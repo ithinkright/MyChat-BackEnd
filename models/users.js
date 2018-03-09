@@ -69,10 +69,18 @@ async function findUserByObj(obj) {
     return queryDB(sql, values);
 }
 
+async function clear() {
+    const sql = `
+        truncate users
+    `;
+    return queryDB(sql, []);
+}
+
 exports = module.exports = {
     createUserTable,
     insertUser,
     showTable,
     findUserById,
-    findUserByObj
+    findUserByObj,
+    clear
 }

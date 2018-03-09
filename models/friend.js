@@ -137,6 +137,13 @@ async function deleteFriend(obj) {
     return queryDB(sql, values);
 }
 
+async function clear() {
+    const sql = `
+      truncate friends
+    `;
+    return queryDB(sql, []);
+}
+
 exports = module.exports = {
     createFriendTable,
     insertFriend,
@@ -146,5 +153,6 @@ exports = module.exports = {
     removeRole,
     addFriendAttribute,
     deleteFriendAttribute,
-    deleteFriend
+    deleteFriend,
+    clear
 }
