@@ -43,7 +43,7 @@ async function getFriends(ctx, next) {
         let [role] = await roleModel.findRoleById({ roleid: friend.roleid });
         friend.attributename = attribute.name;
         friend.rolename = role.name;
-        friend.friendid = toString(friend.friendid);
+        friend.friendid = friend.friendid.toString();
         result.push(friend);
     }
     sendRes(ctx, {data: result});
