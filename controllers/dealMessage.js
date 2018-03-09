@@ -12,6 +12,7 @@ async function process(ctx, next) {
     switch (attribute.name) {
       case "compute":
         result = compute(obj.mes);
+        result = result.toString();
         break;
       case "translate":
         obj.from = "zh-CHS";
