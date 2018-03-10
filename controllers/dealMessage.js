@@ -8,6 +8,7 @@ async function process(ctx, next) {
     let obj = pick(ctx.param, ['friendid', 'mes']);
     let result = "更多功能请升级为MyChat尊享会员，可缴费至15521160474支付宝";
     let [friend] = await friendModel.findFriendById({ friendid: obj.friendid });
+    console.log(friend === undefined ? "Yes" : "No");
     if (!friend) {
         throw new MyChatError(2, '该朋友不存在');
         sendRes(ctx, {result: result});
