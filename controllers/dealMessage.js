@@ -6,12 +6,13 @@ const { MyChatError, pick, sendRes } = require('../services/MyChatUtils/')
 
 async function process(ctx, next) {
     let obj = pick(ctx.param, ['friendid', 'mes']);
+    let result = "更多功能请升级为MyChat尊享会员，可缴费至15521160474支付宝";
     let [friend] = await friendModel.findFriendById({ friendid: obj.friendid });
     if (!friend) {
         throw new MyChatError(2, '该朋友不存在');
+        sendRes(ctx, {result: result});
     }
     let [attribute] = await attributeModel.findAttributeById({ attributeid: friend.attribute });
-    let result = "更多功能请升级为MyChat尊享会员，可缴费至15521160474支付宝";
     try {
         switch (attribute.name) {
           case "compute":
@@ -19,7 +20,7 @@ async function process(ctx, next) {
                 result = compute(obj.mes);
             } catch (e) {
                 throw new MyChatError(2, "输入的字符串无法求值");
-                result = "该字符串无法求值，请升级为VIP";
+                result = "无法求值，请升级为VIP";
             }
             result = result.toString();
             break;
@@ -36,7 +37,9 @@ async function process(ctx, next) {
         console.log(e);
         throw new MyChatError(2, "属性不存在")
     }
-    sendRes(ctx, {result: result});
+    finally {
+      sendRes(ctx, {result: result});
+    }
 }
 
 exports = module.exports = {
