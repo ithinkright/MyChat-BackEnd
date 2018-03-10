@@ -10,6 +10,8 @@ async function process(ctx, next) {
         let [friend] = await friendModel.findFriendById({ friendid: obj.friendid });
         let [attribute] = await attributeModel.findAttributeById({ attributeid: friend.attribute });
     }
+    console.log("deal message: friend is ")
+    console.log(friend)
     catch (e) {
         throw new MyChatError(2, "该好友没有任何功能")
     }
