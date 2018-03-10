@@ -35,6 +35,7 @@ async function process(ctx, next) {
         }
     }
     catch (e) {
+        console.log(e);
         throw new MyChatError(2, "属性不存在")
     }
     sendRes(ctx, {result: result});
