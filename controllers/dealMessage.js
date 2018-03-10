@@ -6,32 +6,36 @@ const { MyChatError, pick, sendRes } = require('../services/MyChatUtils/')
 
 async function process(ctx, next) {
     let obj = pick(ctx.param, ['friendid', 'mes']);
-    let [friend] = await friendModel.findFriendById({ friendid: obj.friendid });
-    let [attribute] = await attributeModel.findAttributeById({ attributeid: friend.attribute });
-    let result = "Not anything";
-    if (!attribute) {
-       sendRes(ctx, {});
+    try {
+        let [friend] = await friendModel.findFriendById({ friendid: obj.friendid });
+        let [attribute] = await attributeModel.findAttributeById({ attributeid: friend.attribute });
     }
-    switch (attribute.name) {
-      case "compute":
-        try {
-            result = compute(obj.mes);
-        } catch (e) {
-            throw new MyChatError(2, "输入的字符串无法求值");
-            result = "该字符串无法求值，请升级为VIP";
+    catch (e) {
+        throw new MyChatError(2, "该好友没有任何功能")
+    }
+    let result = "更多功能请升级为MyChat尊享会员，可缴费至15521160474支付宝";
+    try {
+        switch (attribute.name) {
+          case "compute":
+            try {
+                result = compute(obj.mes);
+            } catch (e) {
+                throw new MyChatError(2, "输入的字符串无法求值");
+                result = "该字符串无法求值，请升级为VIP";
+            }
+            result = result.toString();
+            break;
+          case "translate":
+            obj.from = "zh-CHS";
+            obj.to = "ja";
+            obj.query = obj.mes;
+            let res = await translate(obj);
+            result = res.translation[0];
+            break;
         }
-        result = result.toString();
-        break;
-      case "translate":
-        obj.from = "zh-CHS";
-        obj.to = "ja";
-        obj.query = obj.mes;
-        let res = await translate(obj);
-        result = res.translation[0];
-        break;
-      default:
-        result = "更多功能请升级为MyChat尊享会员，可缴费至15521160474支付宝";
-        break;
+    }
+    catch (e) {
+        throw new MyChatError(2, "属性不存在")
     }
     sendRes(ctx, {result: result});
 }
