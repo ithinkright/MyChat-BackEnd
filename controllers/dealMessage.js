@@ -6,15 +6,8 @@ const { MyChatError, pick, sendRes } = require('../services/MyChatUtils/')
 
 async function process(ctx, next) {
     let obj = pick(ctx.param, ['friendid', 'mes']);
-    try {
-        let [friend] = await friendModel.findFriendById({ friendid: obj.friendid });
-        let [attribute] = await attributeModel.findAttributeById({ attributeid: friend.attribute });
-    }
-    catch (e) {
-        throw new MyChatError(2, "该好友没有任何功能")
-    }
-    console.log("deal message: friend is ")
-    console.log(friend)
+    let [friend] = await friendModel.findFriendById({ friendid: obj.friendid });
+    let [attribute] = await attributeModel.findAttributeById({ attributeid: friend.attribute });
     let result = "更多功能请升级为MyChat尊享会员，可缴费至15521160474支付宝";
     try {
         switch (attribute.name) {
