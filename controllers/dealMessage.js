@@ -25,7 +25,7 @@ async function process(ctx, next) {
             result = result.toString();
             break;
           case "translate":
-            obj.from = "zh-CHS";
+            obj.from = "auto";
             obj.to = "ja";
             obj.query = obj.mes;
             let res = await translate(obj);

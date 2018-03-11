@@ -5,9 +5,9 @@ const key = "f92CuyCGVh9KHSoM43rKpBEzCxQiOQOd";
 
 //接口需要提供的数据
 let test = {
-    from: "zh-CHS",  //源语言
+    from: "auto",  //源语言
     to: "ja",   //目标语言
-    query: "我爱你"  //文本
+    query: "I Love You"  //文本
 }
 
 async function tranlate(obj) {
@@ -41,9 +41,9 @@ async function tranlate(obj) {
     return result.data;
 }
 
-// async function mytest() {
-//     let result = await tranlate(test);
-//     console.log(result)
-// }
-// mytest()
+async function mytest() {
+    let result = await tranlate(test);
+    console.log(result)
+}
+mytest()
 exports = module.exports = tranlate;
