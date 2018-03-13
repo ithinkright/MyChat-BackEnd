@@ -1,5 +1,5 @@
 const queryDB = require('../services/db')
-const { MyChatError } = require('../services/MyChatUtils')
+const { MyChatError,attribute } = require('../services/MyChatUtils')
 
 async function createFriendTable() {
     if (await showTable())
@@ -75,10 +75,10 @@ async function findFriendByObj(obj) {
 async function assignRole(obj) {
     const sql = `
         UPDATE friends
-        SET friends.roleid = ${obj.roleid}
+        SET friends.roleid = (?)
         WHERE friends.friendid = (?)
     `;
-    return queryDB(sql, [obj.friendid]);
+    return queryDB(sql, [obj.roleid, obj.friendid]);
 }
 
 async function removeRole(obj) {
@@ -92,35 +92,18 @@ async function removeRole(obj) {
 
 async function addFriendAttribute(obj) {
     let [friend] = await findFriendById({ friendid: obj.friendid });
-    let attribute = friend.attribute;
-    if (!attribute) {
-      attribute = obj.attributeid;
-    }
-    else {
-      attribute += "," + obj.attributeid;
-    }
-    attribute = "abcd";
+    let newAttribute = await attribute.merge(friend.attribute, obj.attributeid);
     const sql = `
         UPDATE friends
         SET friends.attribute = (?)
         WHERE friends.friendid = (?)
     `;
-    return queryDB(sql, [attribute, friend.friendid]);
+    return queryDB(sql, [newAttribute, friend.friendid]);
 }
 
 async function deleteFriendAttribute(obj) {
     let [friend] = await findFriendById({ friendid: obj.friendid });
-    let attribute = friend.attribute;
-    let array = []
-    attribute.split(obj.attributeid).forEach(function(item) {
-        if (item.length != 0) {
-            if (item[0] === ",")
-                array.push(item.slice(1, item.length));
-            if (item[item.length-1] === ",")
-                array.push(item.slice(0, item.length-1));
-        }
-    });
-    let newAttribute = array.join(',');
+    let newAttribute = await attribute.remove(friend.attribute, obj.attributeid);
     const sql = `
         UPDATE friends
         SET friends.attribute = (?)

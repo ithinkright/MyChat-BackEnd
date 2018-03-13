@@ -3,5 +3,6 @@ exports = module.exports = {
     MyChatError: require('./MyChatError'),
     runPre: require('./runPre'),
     sendRes: require('./sendRes'),
-    pick: require('./pick')
+    pick: require('./pick'),
+    attribute: require('./attribute')
 }

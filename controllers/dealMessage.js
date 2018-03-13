@@ -14,7 +14,8 @@ async function process(ctx, next) {
     }
     let [attribute] = await attributeModel.findAttributeById({ attributeid: friend.attribute });
     try {
-        switch (attribute.name) {
+        let name = attribute.split(',')[0];
+        switch (name) {
           case "compute":
             try {
                 result = compute(obj.mes);

@@ -13,8 +13,8 @@
 + request
     ```
     {
-	    "username": "weimumu333", //required
-	    "password": "weimumu333" //required 请做一次md5再发过来
+        "username": "weimumu333", //required
+        "password": "weimumu333" //required 请做一次md5再发过来
     }
     ```
 + response
@@ -41,8 +41,8 @@
 + request
     ```
     {
-	    "username": "weimumu333", //required
-	    "password": "weimumu333" //required 请做一次md5再发过来
+        "username": "weimumu333", //required
+        "password": "weimumu333" //required 请做一次md5再发过来
     }
     ```
 + response
@@ -62,15 +62,15 @@
         "code": 2,
         "message": "用户名不存在 or 密码错误"
     }
-    ```  
+    ```
 
 #### upload
 + POST /api/users/upload
 + request 这里注意一下，因为涉及文件+文本，所以格式为form-data格式，不再是json
     ```
     {
-	    "userid": "32位的userid", //required
-	    "avatar": 文件 //required
+        "userid": "32位的userid", //required
+        "avatar": 文件 //required
     }
     ```
 
@@ -141,8 +141,8 @@
 + request
     ```
     {
-	    "friendid": "1",              // required
-	    "mes": "1*3*2"  // required
+        "friendid": "1",              // required
+        "mes": "1*3*2"  // required
     }
     ```
 + response
@@ -160,4 +160,291 @@
         "result": "更多功能敬请期待！",
         "code": 0,
         "message": "ok"
-    }    ```
+    }    
+    ```
+
+
+#### Roles
+
+####Add Role 给数据库添加角色
+
+* POST /api/roles
+
+* request
+
+  ```
+  {
+  	"name": "张园园"
+      "description": "弹吉他"
+      "attribute": "6f9335a067141bac576e067c05086717"
+      "usercount": "999999"
+      // all required
+  }
+  ```
+
+* response
+
+  * success example
+
+    ```
+    {
+        "name": "张园园",
+        "description": "弹吉他",
+        "attribute": "6f9335a067141bac576e067c05086717",
+        "usercount": "99999",
+        "roleid": "e19e31457ca313062b9834c5e0d760b7",
+        "code": 0,
+        "message": "ok"
+    }
+    ```
+
+  * failed example
+
+    ```
+    {
+        "code": 2,
+        "message": "角色已存在"
+    }
+    ```
+
+#### DELETE Role 删除数据库角色
+
+* DELETE /api/roles
+
+* request
+
+  ```
+  {
+  	"roleid": "e19e31457ca313062b9834c5e0d760b7"
+  	// required
+  }
+  ```
+
+* response
+
+  * success example
+
+    ```
+    {
+        "roleid": "e19e31457ca313062b9834c5e0d760b7",
+        "code": 0,
+        "message": "ok"
+    }
+    ```
+
+  * failed example
+
+    ```
+    {
+        "code": 2,
+        "message": "角色不存在"
+    }
+    ```
+
+#### Assign Role 给某个朋友仅限一个角色，超过一个直接覆盖
+
++ POST /api/friendsroles
++ request
+    ```
+    {
+        "friendid": "1",                                            
+        "roleid": "ce8ae9da5b7cd6c3df2929543a9af92d"
+        // required
+    }
+    ```
++ response
+  + success example
+    ```
+    {
+        "friendid": 1,
+        "friendname": "1212",
+        "gender": "mela",
+        "birth": "20170909",
+        "roleid": "ce8ae9da5b7cd6c3df2929543a9af92d",
+        "attribute": "0c83f57c786a0b4a39efab23731c7ebc",
+        "code": 0,
+        "message": "ok"
+    }
+    ```
+    + failed example
+    ```
+    {
+        "code": 2,
+        "message": "找不到此角色"
+    }
+    ```
+
+#### Remove Role 给某个朋友移除角色
++ DELETE /api/friendsroles
++ request
+    ```
+    {
+        "friendid": "1",                                            
+        "roleid": "0c83f57c786a0b4a39efab23731c7ebc"
+        // all required
+    }
+    ```
++ response
+  + success example
+    ```
+    {
+        "friendid": 1,
+        "friendname": "1212",
+        "gender": "mela",
+        "birth": "20170909",
+        "roleid": null,
+        "attribute": "",
+        "code": 0,
+        "message": "ok"
+    }
+    ```
+  + failed example
+    ```
+    {
+        "code": 2,
+        "message": "找不到此朋友"
+    }
+    ```
+
+#### Attributes 
+
+#### Add Attribute 给数据库添加属性
+
+* POST /api/attributes
+
+* request
+
+  ```
+  {
+  	"name": "打代码",
+  	"description": "一夜千行",
+   	"usercount": "99999"
+    	// all required
+  }
+  ```
+
+* response
+
+  * success example
+
+    ```
+    {
+        "name": "打代码",
+        "description": "一夜千行",
+        "usercount": "99999",
+        "attributeid": "6f9335a067141bac576e067c05086717",
+        "code": 0,
+        "message": "ok"
+    }
+    ```
+
+  * failed example
+
+    ```
+    {
+        "code": 2,
+        "message": "该属性已存在"
+    }
+    ```
+
+#### Delete Attributes 删除数据库中的属性
+
+* DELETE /api/attributes
+
+* request
+
+  ```
+  {
+  	"attributeid": "6f9335a067141bac576e067c05086717"
+  	// all required
+  }
+  ```
+
+* response
+
+  * success example
+
+    ```
+    {
+        "attributeid": "6f9335a067141bac576e067c05086717",
+        "name": "打代码",
+        "description": "一夜千行",
+        "usercount": "99999",
+        "code": 0,
+        "message": "ok"
+    }
+    ```
+
+  * failed example
+
+    ```
+    {
+        "code": 2,
+        "message": "该属性不存在"
+    }
+    ```
+
+#### Add Attribute to friends 给好友添加属性
+
++ POST /api/friendsattr
++ request
+    ```
+    {
+        "friendid": "1",                                            
+        "attributeid": "0c83f57c786a0b4a39efab23731c7ebc"   
+        // all required
+    }
+    ```
++ response
+  + success example
+    ```
+    {
+        "friendid": 1,
+        "friendname": "1212",
+        "gender": "mela",
+        "birth": "20170909",
+        "roleid": null,
+        "attribute": "0c83f57c786a0b4a39efab23731c7ebc",
+        "code": 0,
+        "message": "ok"
+    }
+    ```
+    + failed example
+    ```
+    {
+        "code": 2,
+        "message": "找不到此属性"
+    }
+    ```
+
+#### Delete attributes 给某个朋友删除属性
++ DELETE /api/freindsattr
++ request
+    ```
+    {
+        "friendid": "1",                                                  
+        "attributeid": "0c83f57c786a0b4a39efab23731c7ebc"     
+        // all required
+    }
+    ```
++ response
+  + success example
+    ```
+    {
+        "friendid": 1,
+        "friendname": "1212",
+        "gender": "mela",
+        "birth": "20170909",
+        "roleid": null,
+        "attribute": "",
+        "code": 0,
+        "message": "ok"
+    }
+    ```
+  + failed example
+    ```
+    {
+        "code": 2,
+        "message": "试图从空属性值中删除属性"
+    }
+    ```

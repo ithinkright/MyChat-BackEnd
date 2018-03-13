@@ -1,14 +1,14 @@
 const Router = require('koa-router')
-const { friendCtrl } = require('../controllers')
+const { friends_attributes } = require('../controllers')
 
-const router = new Router({ prefix: '/api/friends' });
+const router = new Router({ prefix: '/api/friendsattr' });
 
 router.get('/', async function (ctx, next) {
-  ctx.body = 'this is a friends api route'
+  ctx.body = 'this is a friends attributes api route'
 })
 
-router.post('/', friendCtrl.addFriend)
+router.post('/', friends_attributes.addAttribute)
 
 
-router.delete('/', friendCtrl.deleteFriend)
+router.delete('/', friends_attributes.deleteAttribute)
 exports = module.exports = router

@@ -45,5 +45,5 @@ async function mytest() {
     let result = await tranlate(test);
     console.log(result)
 }
-mytest()
+// mytest()
 exports = module.exports = tranlate;
