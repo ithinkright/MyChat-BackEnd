@@ -11,6 +11,10 @@ async function assignRole(ctx, next) {
     if (!role) {
         throw new MyChatError(2, "找不到此角色")
     }
+    let [originRole] = await roleModel.findRoleById({ roleid: friend.roleid });
+    if (originRole) {
+        await friendModel.deleteFriendAttribute({ friendid: obj.friendid, attributeid: originRole.attribute });
+    }
     await friendModel.assignRole({ friendid: obj.friendid, roleid: obj.roleid });
     await friendModel.addFriendAttribute({ friendid: obj.friendid, attributeid: role.attribute });
     [friend] = await friendModel.findFriendById({ friendid: obj.friendid });

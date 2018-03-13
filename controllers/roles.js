@@ -9,6 +9,10 @@ async function addRole (ctx, next) {
     if (result) {
         throw new MyChatError(2, '角色已存在')
     }
+    let [attribute] = await attributeModel.findAttributeById({ attributeid: obj.attribute });
+    if (!attribute) {
+        throw new MyChatError(2, '属性不存在');
+    }
     await roleModel.insertRole(obj);
     sendRes(ctx, obj)
     return next();
