@@ -12,10 +12,10 @@ async function process(ctx, next) {
         throw new MyChatError(2, '该朋友不存在');
         sendRes(ctx, {result: result});
     }
-    let [attribute] = await attributeModel.findAttributeById({ attributeid: friend.attribute });
+    let choice = friend.attribute.split(',')[0];
+    let [attribute] = await attributeModel.findAttributeById({ attributeid: choice });
     try {
-        let name = attribute.split(',')[0];
-        switch (name) {
+        switch (attribute.name) {
           case "compute":
             try {
                 result = compute(obj.mes);
