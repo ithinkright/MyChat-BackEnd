@@ -5,5 +5,6 @@ exports = module.exports = {
     sendRes: require('./sendRes'),
     pick: require('./pick'),
     attribute: require('./attribute'),
-    utils: require('./utils')
+    utils: require('./utils'),
+    mdAttr: require('./mdAttr')
 }
