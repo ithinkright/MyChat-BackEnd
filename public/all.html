@@ -1,0 +1,7 @@
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io.connect('http://localhost:3000');
+    socket.emit('start', {
+        userid: '2e3e5d8dfcdeca24fc3f2a28024927d5'
+    })
+</script>

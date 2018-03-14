@@ -4,5 +4,6 @@ exports = module.exports = {
     runPre: require('./runPre'),
     sendRes: require('./sendRes'),
     pick: require('./pick'),
-    attribute: require('./attribute')
+    attribute: require('./attribute'),
+    utils: require('./utils')
 }

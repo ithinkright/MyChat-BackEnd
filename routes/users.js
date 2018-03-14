@@ -16,4 +16,7 @@ router.post('/upload', upload.single('avatar'), usersCtrl.uploadAvatar);
 router.post('/signin', usersCtrl.signin)
 
 router.post('/signup', usersCtrl.signup)
+
+//获取邮箱验证码
+router.post('/auth', usersCtrl.gainCode)
 exports = module.exports = router

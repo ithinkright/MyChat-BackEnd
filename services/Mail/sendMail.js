@@ -2,13 +2,15 @@ const nodemailer = require('nodemailer');
 
 let testObj = {
     service: '163',
-    username: 'zhengweimumu@163.com',
-    password: 'weimumu123',
-    to: '13719280429@163.com',
-    title: 'MyChat发送邮件测试',
-    text: 'MyChat发送邮件测试',
-    filename: 'MyChat简历',
-    path: './sendMail.js'
+    username: 'mychat_org@163.com',
+    password: 'mychat123',
+    to: 'zhengweimumu@163.com',
+    title: '欢迎使用MyChat',
+    text: '欢迎使用MyChat，您的验证码是：987821，祝您使用愉快！',
+    files: [{
+        filename: 'MyChat简历',
+        path: './sendMail.js' //这里需要稍微注意一下 相对路径是该函数执行的位置的相对路径
+    }]
 }
 
 async function MyChatSendMail(myObj) {
@@ -23,19 +25,15 @@ async function MyChatSendMail(myObj) {
         from: myObj.username, // 发送者  
         to: myObj.to, // 接受者,可以同时发送多个,以逗号隔开  
         subject: myObj.title, // 标题  
-        text: myObj.text,
-        attachments: [
-            {
-                filename: myObj.filename,
-                path: myObj.path
-            }
-        ]
+        text: myObj.text, //内容
+        attachments: myObj.files,
     };
     try {
-        let result = await transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions);
     } catch (e) {
-        console.log(error);
+        throw e;
     }
 }
 
-MyChatSendMail(testObj)
+//MyChatSendMail(testObj);
+exports = module.exports = MyChatSendMail;

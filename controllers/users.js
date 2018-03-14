@@ -1,6 +1,7 @@
 const { usersModel } = require('../models')
 const { getOriginFrends } = require('./friends')
-const { MyChatError, pick, sendRes } = require('../services/MyChatUtils/')
+const MyChatSendMail = require('../services/Mail/sendMail');
+const { MyChatError, pick, sendRes, utils } = require('../services/MyChatUtils/')
 const fs = require('fs');
 const md5 = require('md5')
 
@@ -52,9 +53,29 @@ async function signin(ctx, next) {
     return next()
 }
 
-
+async function gainCode(ctx, next) {
+    let code = utils.proCode();
+    let user = pick(ctx.param, ['username']);
+    let Obj = {
+        service: '163',
+        username: 'mychat_org@163.com',
+        password: 'mychat123',
+        to: user.username,
+        title: '欢迎使用MyChat',
+        text: `[MyChat]，您的邮箱验证码是：${code}，5分钟内有效。请勿向他人泄露。如非本人操作，可忽略本信息。`,
+        files: [],
+    };
+    try {
+        await MyChatSendMail(Obj);
+        sendRes(ctx, { authcode: code });
+    } catch (e) {
+        throw new MyChatError(2, '验证码无法成功发送，请重新输入邮箱');
+    }
+    return next();
+}
 exports = module.exports = {
     signup,
     signin,
-    uploadAvatar
+    uploadAvatar,
+    gainCode
 }
