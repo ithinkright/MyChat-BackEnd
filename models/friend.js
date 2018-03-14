@@ -1,5 +1,5 @@
 const queryDB = require('../services/db')
-const { MyChatError,attribute } = require('../services/MyChatUtils')
+const { MyChatError} = require('../services/MyChatUtils')
 
 async function createFriendTable() {
     if (await showTable())
@@ -72,7 +72,7 @@ async function findFriendByObj(obj) {
     return queryDB(sql, values);
 }
 
-async function assignRole(obj) {
+async function modifyRole(obj) {
     const sql = `
         UPDATE friends
         SET friends.roleid = (?)
@@ -81,35 +81,13 @@ async function assignRole(obj) {
     return queryDB(sql, [obj.roleid, obj.friendid]);
 }
 
-async function removeRole(obj) {
-    const sql = `
-        UPDATE friends
-        SET friends.roleid = null
-        WHERE friends.friendid = (?)
-    `;
-    return queryDB(sql, [obj.friendid]);
-}
-
-async function addFriendAttribute(obj) {
-    let [friend] = await findFriendById({ friendid: obj.friendid });
-    let newAttribute = await attribute.merge(friend.attribute, obj.attributeid);
+async function modifyAttribute(obj) {
     const sql = `
         UPDATE friends
         SET friends.attribute = (?)
         WHERE friends.friendid = (?)
     `;
-    return queryDB(sql, [newAttribute, friend.friendid]);
-}
-
-async function deleteFriendAttribute(obj) {
-    let [friend] = await findFriendById({ friendid: obj.friendid });
-    let newAttribute = await attribute.remove(friend.attribute, obj.attributeid);
-    const sql = `
-        UPDATE friends
-        SET friends.attribute = (?)
-        WHERE friends.friendid = (?)
-    `;
-    return queryDB(sql, [newAttribute, friend.friendid]);
+    return queryDB(sql, [obj.attributeid, obj.friendid]);
 }
 
 async function deleteFriend(obj) {
@@ -132,10 +110,8 @@ exports = module.exports = {
     insertFriend,
     findFriendById,
     findFriendByObj,
-    assignRole,
-    removeRole,
-    addFriendAttribute,
-    deleteFriendAttribute,
+    modifyRole,
+    modifyAttribute,
     deleteFriend,
     clear
 }

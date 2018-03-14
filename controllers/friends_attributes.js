@@ -1,5 +1,5 @@
 const { friendModel, attributeModel } = require('../models');
-const { MyChatError, pick, sendRes } = require('../services/MyChatUtils');
+const { MyChatError, pick, sendRes, mdAttr } = require('../services/MyChatUtils');
 
 async function addAttribute (ctx, next) {
     const obj = pick(ctx.param, ['friendid', 'attributeid']);
@@ -11,7 +11,8 @@ async function addAttribute (ctx, next) {
     if (!attribute) {
         throw new MyChatError(2, '属性不存在')
     }
-    await friendModel.addFriendAttribute({ friendid: obj.friendid, attributeid: obj.attributeid });
+    let newAttribute = mdAttr.merge(friend.attribute, attribute.attributeid);
+    await friendModel.modifyAttribute({ friendid: obj.friendid, attributeid: newAttribute });
     let [result] = await friendModel.findFriendById({ friendid: obj.friendid });
     sendRes(ctx, result)
     return next();
@@ -27,7 +28,8 @@ async function deleteAttribute (ctx, next) {
     if (!attribute) {
         throw new MyChatError(2, '属性不存在')
     }
-    await friendModel.deleteFriendAttribute({ friendid: obj.friendid, attributeid: obj.attributeid });
+    let newAttribute = mdAttr.remove(friend.attribute, attribute.attributeid);
+    await friendModel.modifyAttribute({ friendid: obj.friendid, attributeid: newAttribute });
     let [result] = await friendModel.findFriendById({ friendid: obj.friendid });
     sendRes(ctx, result);
     return next();

@@ -1,6 +1,6 @@
 const MyChatError = require('./MyChatError');
 
-async function merge(a1, a2) {
+function merge(a1, a2) {
     if (!a1 && !a2) {
         return undefined;
     }
@@ -18,7 +18,7 @@ async function merge(a1, a2) {
     }
 }
 
-async function remove(a1, a2) {
+function remove(a1, a2) {
     if (!a1) {
         console.log("a = " + a1 + " b = " + a2);
         throw new MyChatError(2, "试图从空属性值中删除属性");
