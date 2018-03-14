@@ -22,6 +22,7 @@ async function process(ctx, next) {
           result = compute(obj.mes);
         }
         catch (e) {
+          console.log("字符串无法求值");
           sendRes(ctx, {result: "该字符串无法求值"})
         }
         result = result.toString();
