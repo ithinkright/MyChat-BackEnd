@@ -64,6 +64,31 @@
     }
     ```
 
+#### auth
++ POST /api/users/auth
++ request
+    ```
+    {
+        "username": "zhengweimumu@163.com", //required
+    }
+    ```
++ response
+  + success example
+    ```
+    {
+        "authcode": "616476",
+        "code": 0,
+        "message": "ok"
+    }
+    ```
+  + fail example
+    ```
+    {
+        "code": 2,
+        "message": "验证码无法成功发送，请重新输入邮箱"
+    }
+    ```
+
 #### upload
 + POST /api/users/upload
 + request 这里注意一下，因为涉及文件+文本，所以格式为form-data格式，不再是json
