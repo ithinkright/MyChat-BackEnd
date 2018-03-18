@@ -161,6 +161,18 @@
     }
     ```
 
+#### upload
++ POST /api/friends/upload
++ request 这里注意一下，因为涉及文件+文本，所以格式为form-data格式，不再是json
+    ```
+    {
+        "friendid": "1", //required
+        "friendAvatar": 文件 //required
+    }
+    ```
+
++ GET /friendAvatar/friendid.jpg 为头像url
+
 #### Deal Message
 + POST /api/dealMessage
 + request
@@ -331,7 +343,7 @@
     }
     ```
 
-#### Attributes 
+#### Attributes
 
 #### Add Attribute 给数据库添加属性
 

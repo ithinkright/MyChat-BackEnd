@@ -1,6 +1,24 @@
 const { usersModel, friendModel, roleModel, user_friendModel, attributeModel } = require('../models')
 const { MyChatError, pick, sendRes } = require('../services/MyChatUtils/')
 const { friendsData } = require('../data');
+const fs = require('fs');
+
+async function uploadAvatar(ctx, next) {
+    ctx.param = Object.assign(ctx.param, ctx.req.body);
+    console.log(ctx.req.file);
+    let res = pick(ctx.param, ['friendid']);
+    let avatarPath = `public/friendAvatar/${res.friendid}.jpg`;
+    let oldPath = ctx.req.file.path;
+    console.log(fs.existsSync(oldPath))
+    console.log(ctx.req.file);
+    try {
+        fs.renameSync(oldPath, avatarPath);
+        sendRes(ctx)
+    } catch (e) {
+        throw new MyChatError(2, "头像上传失败");
+    }
+    return next();
+}
 
 // 增加好友的请求 请求体包含 添加者id 被添加者的角色、属性以及
 async function addFriend(ctx, next) {
@@ -61,8 +79,20 @@ async function getOriginFrends(userid) {
 
 async function insertFriends(friend) {
     await friendModel.insertFriend(friend).then(function(res) {
-      friend.friendid = res.insertId;
+        friend.friendid = res.insertId;
     });
+    let attributeSet = friend.attribute.split(',');
+    let first = (attributeSet.length === 0 ? "default" : attributeSet[0]);
+    let path = `public/friendAvatar/${first}.png`;
+    if (!fs.existsSync(path)) {
+        path = "public/friendAvatar/default.png";
+    }
+    let avatarPath = `public/friendAvatar/${friend.friendid}.jpg`;
+    try {
+        fs.copyFileSync(path, avatarPath);
+    } catch (e) {
+        console.log(e);
+    }
     await user_friendModel.insertUserFriend({ userid: friend.userid, friendid: friend.friendid });
 }
 
@@ -78,5 +108,6 @@ exports = module.exports = {
     addFriend,
     deleteFriend,
     getOriginFrends,
-    getFriends
+    getFriends,
+    uploadAvatar
 }
