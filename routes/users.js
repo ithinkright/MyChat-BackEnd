@@ -17,6 +17,7 @@ router.post('/signin', usersCtrl.signin)
 
 router.post('/signup', usersCtrl.signup)
 
+router.post('/weather', usersCtrl.gainWeather)
 //获取邮箱验证码
 router.post('/auth', usersCtrl.gainCode)
 exports = module.exports = router

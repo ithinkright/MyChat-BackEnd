@@ -1,5 +1,6 @@
 const { usersModel } = require('../models')
 const { getOriginFrends } = require('./friends')
+const getWeather = require('../services/Weather')
 const MyChatSendMail = require('../services/Mail/sendMail');
 const { MyChatError, pick, sendRes, utils } = require('../services/MyChatUtils/')
 const fs = require('fs');
@@ -17,6 +18,17 @@ async function uploadAvatar(ctx, next) {
         sendRes(ctx)
     } catch (e) {
         throw new MyChatError(2, "头像上传失败");
+    }
+    return next();
+}
+
+async function gainWeather(ctx, next) {
+    let res = pick(ctx.param, ['place']);
+    try {
+        let result = await getWeather(res.place);
+        sendRes(ctx, result);
+    } catch (e) {
+        throw new MyChatError(2, "天气获取失败，请勿频繁获取");
     }
     return next();
 }
@@ -77,5 +89,6 @@ exports = module.exports = {
     signup,
     signin,
     uploadAvatar,
-    gainCode
+    gainCode,
+    gainWeather
 }
