@@ -24,4 +24,10 @@ async function getWeather(place) {
     return res.resp;
 }
 
+async function mytest() {
+  let result = await getWeather("广州");
+  console.log(result);
+}
+
+//mytest();
 exports = module.exports = getWeather;

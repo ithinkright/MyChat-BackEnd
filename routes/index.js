@@ -6,6 +6,7 @@ function loadRouters(app) {
   app.use(require('./dealMessage').routes());
   app.use(require('./friends_attributes').routes());
   app.use(require('./friends_roles').routes());
+  app.use(require('./weather').routes());
 }
 
 exports = module.exports = {

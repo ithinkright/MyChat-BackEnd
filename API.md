@@ -485,3 +485,23 @@
         "message": "试图从空属性值中删除属性"
     }
     ```
+
+#### Weather
++ GET /api/weather
++ request
+  ```
+  {
+      "place": "广州"
+      // all required
+  }
+  ```
++ response
+  + success example // JSON.stringify(result) 字符串化的JSON数据
+  ```
+  {
+        "result": "输入城市有误,请重新输入",
+        "code": 0,
+        "message": "ok"
+    }
+  }
+  ```
