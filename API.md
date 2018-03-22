@@ -161,6 +161,38 @@
     }
     ```
 
+#### Update preference
++ POST /api/friends/:friendid/preference
++ request
+    ```
+    {
+        'email': "xxx"
+        // not required, just anything you want
+    }
+    ```
+
++ response
+  + success example
+    ```
+    {
+        "result": {
+            "userid": "e2fc714c4727ee9395f324cd2e7f331f",
+            "friendid": 2,
+            "preference": "{\"email\":\"1042651820@qq.com\",\"lover\":\"caonima\"}"
+        },
+        "code": 0,
+        "message": "ok"
+    }
+    ```
+  + failed example
+    ```
+    {
+        "code": 2,
+        "message": "好友不存在"
+    }
+    ```
+
+
 #### upload
 + POST /api/friends/upload
 + request 这里注意一下，因为涉及文件+文本，所以格式为form-data格式，不再是json

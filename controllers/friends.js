@@ -83,6 +83,7 @@ async function updatePreference(ctx, next) {
     }
     friend.preference = JSON.stringify(obj);
     await user_friendModel.updatePreference({ friendid: friend.friendid, preference: friend.preference });
+    sendRes(ctx, {result: friend})
     return next();
 }
 
