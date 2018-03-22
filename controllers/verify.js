@@ -5,7 +5,7 @@ const md5 = require('md5');
 async function verifyEmail(ctx, next) {
     let obj = pick(ctx.param, ['email']);
     var checkCode = md5(getRandomCode());
-    let obj = {
+    let info = {
         service: '163',
         username: 'mychat_org@163.com',
         password: 'mychat123',
@@ -17,7 +17,7 @@ async function verifyEmail(ctx, next) {
             path: './app.js' //这里需要稍微注意一下 相对路径是该函数执行的位置的相对路径
         }]
     }
-    await MyChatSendMail(obj);
+    await MyChatSendMail(info);
     sendRes(ctx, {result: checkCode });
 }
 
