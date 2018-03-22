@@ -7,7 +7,8 @@ async function createUserFriendTable() {
     const sql = `
     CREATE TABLE user_friends(
         userid varchar(255) NOT NULL,
-        friendid int NOT NULL
+        friendid int NOT NULL,
+        preference varchar(20000) NOT NULL
     );`;
     const values = [];
     return queryDB(sql, values);
@@ -30,9 +31,9 @@ async function showTable() {
 
 async function insertUserFriend(user_friend) {
     const sql = `
-    INSERT INTO user_friends (userid, friendid) VALUES (?, ?)
+    INSERT INTO user_friends (userid, friendid) VALUES (?, ?, ?)
     `;
-    const values = [user_friend.userid, user_friend.friendid];
+    const values = [user_friend.userid, user_friend.friendid, user_friend.preference];
     return queryDB(sql, values);
 }
 
@@ -76,11 +77,14 @@ async function deleteFriend(obj) {
     return queryDB(sql, values);
 }
 
-async function clear() {
-    const sql = `
-      truncate user_friends
-    `;
-    return queryDB(sql, []);
+async function updatePreference(obj) {
+  const sql = `
+      UPDATE user_friends
+      SET user_friends.preference = (?)
+      WHERE user_friends.friendid = (?)
+  `;
+  const values = [obj.preference, obj.friendid];
+  return queryDB(sql, values);
 }
 
 exports = module.exports = {
@@ -89,5 +93,5 @@ exports = module.exports = {
     findUserFriendById,
     findUserFriendByObj,
     deleteFriend,
-    clear
+    updatePreference
 }

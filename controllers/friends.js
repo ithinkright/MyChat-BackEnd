@@ -67,7 +67,26 @@ async function getFriends(ctx, next) {
     return next();
 }
 
-async function getOriginFrends(userid) {
+
+async function updatePreference(ctx, next) {
+    if (!ctx.params.friendid) {
+        sendRes(ctx, {result: "设置失败，请重试"});
+        throw new MyChatError(2, "好友id有误");
+    }
+    let obj = ctx.param;
+    let [friend] = await user_friendModel.findUserFriendByObj({ friendid: ctx.params.friendid });
+    if (!friend) {
+        throw new MyChatError(2, "好友不存在");
+    }
+    if (friend.preference) {
+        obj = Object.assign(JSON.parse(friend.preference), obj)
+    }
+    friend.preference = JSON.stringify(obj);
+    await user_friendModel.updatePreference({ friendid: friend.friendid, preference: friend.preference });
+    return next();
+}
+
+async function getOriginFrends(userid, next) {
     let data = friendsData.data;
     for (e in data) {
           data[e].userid = userid;
@@ -75,9 +94,10 @@ async function getOriginFrends(userid) {
           data[e].friendid = undefined;
           await insertFriends(data[e]);
     }
+    return next();
 }
 
-async function insertFriends(friend) {
+async function insertFriends(friend, next) {
     await friendModel.insertFriend(friend).then(function(res) {
         friend.friendid = res.insertId;
     });
@@ -94,20 +114,23 @@ async function insertFriends(friend) {
         console.log(e);
     }
     await user_friendModel.insertUserFriend({ userid: friend.userid, friendid: friend.friendid });
+    return next();
 }
 
-async function setAttribute(friend) {
+async function setAttribute(friend, next) {
     let [role] = await roleModel.findRoleById({roleid: friend.roleid});
     if (friend.roleid && !role) {
         throw new MyChatError(2, "该角色id指向的角色不存在")
     }
     friend.attribute = (role === undefined ? undefined : role.attribute);
+    return next();
 }
 
 exports = module.exports = {
     addFriend,
     deleteFriend,
     getOriginFrends,
+    updatePreference,
     getFriends,
     uploadAvatar
 }

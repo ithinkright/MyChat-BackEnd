@@ -11,5 +11,7 @@ router.post('/', friendCtrl.addFriend)
 
 router.post('/upload', upload.single('friendAvatar'), friendCtrl.uploadAvatar)
 
+router.post('/:friendid/preferences', friendCtrl.updatePreference)
+
 router.delete('/', friendCtrl.deleteFriend)
 exports = module.exports = router
