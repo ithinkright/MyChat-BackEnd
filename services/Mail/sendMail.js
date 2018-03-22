@@ -22,9 +22,9 @@ async function MyChatSendMail(myObj) {
         }
     });
     let mailOptions = {
-        from: myObj.username, // 发送者  
-        to: myObj.to, // 接受者,可以同时发送多个,以逗号隔开  
-        subject: myObj.title, // 标题  
+        from: myObj.username, // 发送者
+        to: myObj.to, // 接受者,可以同时发送多个,以逗号隔开
+        subject: myObj.title, // 标题
         text: myObj.text, //内容
         attachments: myObj.files,
     };
