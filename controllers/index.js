@@ -6,5 +6,6 @@ exports = module.exports = {
     dealMessageCtrl: require('./dealMessage'),
     friends_attributes: require('./friends_attributes'),
     friends_roles: require('./friends_roles'),
-    weatherCtrl: require('./weather')
+    weatherCtrl: require('./weather'),
+    verifyCtrl: require('./verify')
 }
