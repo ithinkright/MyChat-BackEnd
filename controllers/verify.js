@@ -4,7 +4,7 @@ const md5 = require('md5');
 
 async function verifyEmail(ctx, next) {
     let obj = pick(ctx.param, ['email']);
-    var checkCode = md5(getRandomCode());
+    var checkCode = getRandomCode();
     let info = {
         service: '163',
         username: 'mychat_org@163.com',
@@ -18,7 +18,7 @@ async function verifyEmail(ctx, next) {
         }]
     }
     await MyChatSendMail(info);
-    sendRes(ctx, {result: checkCode });
+    sendRes(ctx, {result: md5(checkCode) });
 }
 
 function getRandomCode() {
