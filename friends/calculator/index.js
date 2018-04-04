@@ -1,17 +1,20 @@
 const server = require('http').createServer();
-const { compute } = require('./api');
+const api = require('./api');
+const config = require('../config');
 
-const io = require('socket.io')(server, {
-  path: '/',
-  serveClient: false,
-  // below are engine.IO options
-  pingInterval: 10000,
-  pingTimeout: 5000,
-  cookie: false
-});
-
-server.listen(3002);
+const io = require('socket.io')(server, config.io);
 
 io.on('connection', (socket) => {
-  // 从数据库获取用户的
+  socket.on('message', (data) => {
+    console.log(data);
+    const { message } = data;
+    try {
+      const result = api.compute(message);
+      socket.emit('message', { message: result.toString() });
+    } catch (err) {
+      socket.emit('message', { message: '抱歉，我解析不了该表达式' });
+    }
+  })
 });
+
+server.listen(config.calculator.port);

@@ -1,4 +1,13 @@
 exports = module.exports = {
+  io: {
+    path: '/',
+    serveClient: false,
+    // below are engine.IO options
+    pingInterval: 10000,
+    pingTimeout: 5000,
+    cookie: false
+  },
+
   postman: {
     port: 3001,
     mysql: {
@@ -8,5 +17,9 @@ exports = module.exports = {
       database: 'MyChat-postman',
       connectionLimit: 10,
     },
+  },
+
+  calculator: {
+    port: 3002,
   },
 };

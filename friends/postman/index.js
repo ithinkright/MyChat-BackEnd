@@ -1,19 +1,13 @@
 const server = require('http').createServer();
 const api = require('./api');
 const db = require('./db');
+const config = require('../config');
 
 const preference = {};
 const mail = {};
 const help = '对我说\"发邮件\"就可以发一封邮件，其他功能敬请期待！';
 
-const io = require('socket.io')(server, {
-  path: '/',
-  serveClient: false,
-  // below are engine.IO options
-  pingInterval: 10000,
-  pingTimeout: 5000,
-  cookie: false
-});
+const io = require('socket.io')(server, config.io);
 
 io.on('connection', (socket) => {
   socket.on('hello', async (data) => {
@@ -106,4 +100,4 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(require('../config').postman);
+server.listen(config.postman.port);
