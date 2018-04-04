@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
       };
       socket.emit('messages', {
         messages: [
-          'Hello~这是咱们第一次见面。你先得添加一个邮箱账户（目前只支持 QQ 邮箱）才能使用此服务。',
+          'Hello，这是咱们第一次见面。你先得添加一个邮箱账户（目前只支持 QQ 邮箱）才能使用此服务。',
           '请问你的 QQ 邮箱账号是？',
         ],
       });
@@ -32,8 +32,8 @@ io.on('connection', (socket) => {
         status: 'done',
         data: accounts[0],
       };
-      mail[userid] = { status: 'to', data: {} };
-      socket.emit('message', { message: '你要发邮件给谁？' });
+      // mail[userid] = { status: 'to', data: {} };
+      // socket.emit('message', { message: '你要发邮件给谁？' });
     }
   });
 

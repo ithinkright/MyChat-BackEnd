@@ -22,4 +22,15 @@ exports = module.exports = {
   calculator: {
     port: 3002,
   },
+
+  translator: {
+    port: 3003,
+    mysql: {
+      host: '139.199.174.146',
+      user: 'MyChatOwner',
+      password: 'WoJueDeDui',
+      database: 'MyChat-translator',
+      connectionLimit: 10,
+    },
+  }
 };

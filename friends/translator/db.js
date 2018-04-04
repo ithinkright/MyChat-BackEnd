@@ -1,4 +1,4 @@
-const options = require('../config').postman.mysql;
+const options = require('../config').translator.mysql;
 const queryDb = require('../mysql').getQueryDb(options);
 
 function findUserById(userid) {
@@ -13,14 +13,14 @@ function createUser(userid) {
   return queryDb(sql, values);
 }
 
-function updateAccounts(userid, accounts) {
-  const sql = `UPDATE user SET accounts = ? WHERE userid = ?;`;
-  const values = [accounts, userid];
+function updateLanguage(userid, language) {
+  const sql = `UPDATE user SET language = ? WHERE userid = ?;`;
+  const values = [language, userid];
   return queryDb(sql, values);
 }
 
 exports = module.exports = {
   findUserById,
   createUser,
-  updateAccounts,
+  updateLanguage,
 };
