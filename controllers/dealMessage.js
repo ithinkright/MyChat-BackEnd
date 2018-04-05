@@ -13,7 +13,7 @@ async function process(ctx, next) {
     }
     let choice = friend.attribute.split(',')[0];
     switch (choice) {
-      case "77e73f3a185e16d1f08ca5e057710b9d":
+      case "35b4b419fa4b8c97858f967daf196f96":
         try {
           result = compute(obj.mes);
         }
@@ -23,7 +23,7 @@ async function process(ctx, next) {
         }
         result = result.toString();
         break;
-      case "fc46e26a907870744758b76166150f62":
+      case "8b3607d0f4181a3cb6ffdccf7185f09b":
         obj.from = "auto";
         obj.to = "ja";
         obj.query = obj.mes;
@@ -34,7 +34,7 @@ async function process(ctx, next) {
         let [users_friends] = await users_frineds.findUserFriendByObj({ friendid: obj.friendid });
         let preference = JSON.parse(users_friends.preference);
         break;
-      case "1441df6b1c10f910ccdc400e40b5fce9":
+      case "e9dd3c65c01e1b7167e28137ad16ef79":
         result = await weatherCtrl.get(obj.mes);
         break;
       // 小秘 做点自动回复的好玩东西
