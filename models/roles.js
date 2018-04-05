@@ -31,6 +31,13 @@ async function showTable() {
     return flag;
 }
 
+async function showAllRoles() {
+    const sql = `
+        SELECT * FROM roles
+    `;
+    return queryDB(sql, []);
+}
+
 async function insertRole(role) {
     const sql = `
     INSERT INTO roles (roleid, name, description, attribute, usercount) VALUES (?, ?, ?, ?, ?)
@@ -82,6 +89,7 @@ async function deleteRole(obj) {
 exports = module.exports = {
     createRoleTable,
     insertRole,
+    showAllRoles,
     findRoleById,
     findRoleByObj,
     deleteRole

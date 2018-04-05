@@ -1,28 +1,40 @@
 
 data = [
   {
-      friendname: "computer",
+      friendname: "计算器",
       gender: "male",
-      birth: "20170908",
-      roleid: "df53ca268240ca76670c8566ee54568a"
+      birth: (new Date()).toLocaleDateString(),
+      roleid: "0f1cc1be5cf46c26ed9f9fc9d37ab425"
   },
   {
-      friendname: "translator",
+      friendname: "翻译家",
       gender: "female",
-      birth: "20090908",
-      roleid: "607f2f3099f2a347b327caa70e0be4b2"
+      birth: (new Date()).toLocaleDateString(),
+      roleid: "488aeef6f3264d31ef17491c6312045c"
   },
   {
-      friendname: "Email",
+      friendname: "邮差",
       gender: "female",
-      birth: "20030101",
-      roleid: "ce8ae9da5b7cd6c3df2929543a9af92d"
+      birth: (new Date()).toLocaleDateString(),
+      roleid: "e1a6f488d4bb3c945e31f727f6b712ee"
   },
   {
-      friendname: "Secure",
+      friendname: "小秘",
       gender: "female",
-      birth: "20180308",
-      roleid: "1c0b76fce779f78f51be339c49445c49"
+      birth: (new Date()).toLocaleDateString(),
+      roleid: "4e51fb6fc04e04ecdd05e85c76a571a4"
+  },
+  {
+      friendname: "天气预报",
+      gender: "female",
+      birth: (new Date()).toLocaleDateString(),
+      roleid: "a68661fb5c8ddbb7c11a1d029be5920a"
+  },
+  {
+      friendname: "新垣结衣",
+      gender: "female",
+      birth: (new Date()).toLocaleDateString(),
+      roleid: null
   }
 ]
 

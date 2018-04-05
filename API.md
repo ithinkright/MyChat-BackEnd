@@ -90,6 +90,31 @@
     }
     ```
 
+#### weather 其实不用这个api，已经在好友中添加天气了
+
+* POST /api/users/weather
+
+* request
+
+  ```
+  {
+    	"place": "广州"
+    	// required
+  }
+  ```
+
+* response
+
+  * success example
+
+  ```
+  {
+      "result": "城市: 广州\n温度: 20\n风力: 3级\n湿度: 88%\n风向: 南风\n日升时间: 06:17\n日落时间: 18:44\n空气质量：良\n出行建议：极少数敏感人群应减少户外活动\n未来六天预报：\n5日星期四\t高温 30℃\t低温 21℃\t白天：多云\t晚上：多云\n6日星期五\t高温 29℃\t低温 18℃\t白天：多云\t晚上：阵雨\n7日星期六\t高温 24℃\t低温 14℃\t白天：阵雨\t晚上：多云\n8日星期天\t高温 21℃\t低温 11℃\t白天：多云\t晚上：晴\n9日星期一\t高温 24℃\t低温 13℃\t白天：晴\t晚上：多云\n",
+      "code": 0,
+      "message": "ok"
+  }
+  ```
+
 #### add attributes 为用户添加属性，用于用户购买了一个属性后
 
 * POST /api/users/:userid/attributes
@@ -108,14 +133,28 @@
 
   ```
   {
-    	"
+      "result": [
+          {
+              "userid": "1679091c5a880faf6fb5e6087eb1b2dc",
+              "attributeid": "8b3607d0f4181a3cb6ffdccf7185f09b"
+          },
+          {
+              "userid": "1679091c5a880faf6fb5e6087eb1b2dc",
+              "attributeid": "35b4b419fa4b8c97858f967daf196f96"
+          }
+      ],
+      "code": 0,
+      "message": "ok"
   }
   ```
 
   * failed example
 
   ```
-
+  {
+      "code": "这个好友已经拥有此属性",
+      "message": "ok"
+  }
   ```
 
 #### delete attributes 为用户删除属性，用于用户删除了一个属性
@@ -136,27 +175,43 @@
 
   ```
   {
-    
+      "result": [
+          {
+              "userid": "1679091c5a880faf6fb5e6087eb1b2dc",
+              "attributeid": "8b3607d0f4181a3cb6ffdccf7185f09b"
+          },
+          {
+              "userid": "1679091c5a880faf6fb5e6087eb1b2dc",
+              "attributeid": "35b4b419fa4b8c97858f967daf196f96"
+          }
+      ],
+      "code": 0,
+      "message": "ok"
   }
   ```
 
   * failed example
 
   ```
-
+  {
+      "code": "这个好友不拥有此属性",
+      "message": "ok"
+  }
   ```
+
+
 
 #### upload
 
 + POST /api/users/upload
 
 + request 这里注意一下，因为涉及文件+文本，所以格式为form-data格式，不再是json
-    ```
-    {
-        "userid": "32位的userid", //required
-        "avatar": 文件 //required
-    }
-    ```
+  ```
+  {
+  	"userid": "32位的userid", //required
+  	"avatar": 文件 //required
+  }
+  ```
 
 + GET /avatar/userid.jpg 为头像url
 
@@ -193,26 +248,6 @@
                     "birth": "20090908",
                     "roleid": "607f2f3099f2a347b327caa70e0be4b2",
                     "attribute": "fc46e26a907870744758b76166150f62"
-                }
-            ],
-            [
-                {
-                    "friendid": 7,
-                    "friendname": "Email",
-                    "gender": "female",
-                    "birth": "20030101",
-                    "roleid": "ce8ae9da5b7cd6c3df2929543a9af92d",
-                    "attribute": "0c83f57c786a0b4a39efab23731c7ebc"
-                }
-            ],
-            [
-                {
-                    "friendid": 8,
-                    "friendname": "Secure",
-                    "gender": "female",
-                    "birth": "20180308",
-                    "roleid": "1c0b76fce779f78f51be339c49445c49",
-                    "attribute": "1c0b76fce779f78f51be339c49445c49"
                 }
             ]
         ],
@@ -336,7 +371,7 @@
   ```
 
 #### upload avatar (friends avatar)
-+ POST /api/friends/:friendid/upload
++ POST /api/friends/upload
 
 + request 这里注意一下，因为涉及文件+文本，所以格式为form-data格式，不再是json
     ```
@@ -355,8 +390,7 @@
 - request
 
   ```
-  {
-      "friendid": "1",                                            
+  {                                        
       "roleid": "ce8ae9da5b7cd6c3df2929543a9af92d"
       // required
   }
@@ -542,6 +576,56 @@
 
 #### Roles
 
+#### get all roles 获取所有的角色
+
+* GET /api/roles
+
+* response
+
+  ```
+  {
+      "data": [
+          {
+              "roleid": "0f1cc1be5cf46c26ed9f9fc9d37ab425",
+              "name": "计算器",
+              "description": "计算",
+              "attribute": "35b4b419fa4b8c97858f967daf196f96",
+              "usercount": "999999"
+          },
+          {
+              "roleid": "1c0b76fce779f78f51be339c49445c49",
+              "name": "secure",
+              "description": "sex",
+              "attribute": "1c0b76fce779f78f51be339c49445c49",
+              "usercount": "100000"
+          },
+          {
+              "roleid": "488aeef6f3264d31ef17491c6312045c",
+              "name": "翻译家",
+              "description": "翻译",
+              "attribute": "8b3607d0f4181a3cb6ffdccf7185f09b",
+              "usercount": "999999"
+          },
+          {
+              "roleid": "4e51fb6fc04e04ecdd05e85c76a571a4",
+              "name": "小秘",
+              "description": "记录生活的美好",
+              "attribute": "620bf82011e0c14ebe4a20d6e9df6708",
+              "usercount": "999999"
+          },
+          {
+              "roleid": "607f2f3099f2a347b327caa70e0be4b2",
+              "name": "translator",
+              "description": "translate",
+              "attribute": "fc46e26a907870744758b76166150f62",
+              "usercount": "10000"
+          }
+      ],
+      "code": 0,
+      "message": "ok"
+  }
+  ```
+
 ####add role 给数据库添加角色
 
 * POST /api/roles
@@ -556,6 +640,7 @@
       "usercount": "999999"
       // all required
   }
+
   ```
 
 * response
@@ -619,7 +704,46 @@
 
 #### Attributes
 
-#### add Attribute 给数据库添加属性
+#### get attributes 获取所有的属性
+
+* GET /api/attributes
+
+* response
+
+  ```
+  {
+      "data": [
+          {
+              "attributeid": "0c83f57c786a0b4a39efab23731c7ebc",
+              "name": "email",
+              "description": "send receive email",
+              "usercount": "20000"
+          },
+          {
+              "attributeid": "1441df6b1c10f910ccdc400e40b5fce9",
+              "name": "Weather",
+              "description": "query Weather",
+              "usercount": "23333"
+          },
+          {
+              "attributeid": "19355589c808cb30ffdcbb2e1ed69bec",
+              "name": "发邮件",
+              "description": "连接你和我",
+              "usercount": "10000"
+          },
+          {
+              "attributeid": "1c0b76fce779f78f51be339c49445c49",
+              "name": "secure",
+              "description": "sex",
+              "usercount": "100000"
+          }
+      ],
+      "code": 0,
+      "message": "ok"
+  }
+  ```
+
+#### add attribute 给数据库添加属性
 
 * POST /api/attributes
 
@@ -692,34 +816,6 @@
   {
       "code": 2,
       "message": "该属性不存在"
-  }
-  ```
-
-#### Weather
-+ GET /api/weather
-+ request
-  ```
-  {
-      "place": "广州"
-      // all required
-  }
-  ```
-+ response
-  + success example
-  ```
-  {
-      "result": "城市: 广州\n温度: 13\n风力: 3级\n湿度: 63%\n风向: 北风\n日升时间: 06:30\n日落时间: 18:39\n空气质量：优\n出行建议：各类人群可自由活动\n未来六天预报：\n22日星期四\t高温 22℃\t低温 12℃\t白天：晴\t晚上：多云\n23日星期五\t高温 23℃\t低温 14℃\t白天：多云\t晚上：阴\n24日星期六\t高温 25℃\t低温 17℃\t白天：阴\t晚上：阴\n25日星期天\t高温 25℃\t低温 17℃\t白天：阵雨\t晚上：多云\n26日星期一\t高温 26℃\t低温 17℃\t白天：多云\t晚上：多云\n",
-      "code": 0,
-      "message": "ok"    
-  }
-  ```
-  + failed example
-  ```
-  {
-        "result": "输入城市有误,请重新输入",
-        "code": 0,
-        "message": "ok"
-    }
   }
   ```
 

@@ -1,8 +1,8 @@
 exports = module.exports = {
     usersModel: require('./users'),
-    attributeModel: require('./attribute'),
-    friendModel: require('./friend'),
-    roleModel: require('./role'),
-    user_friendModel: require('./user_friend'),
-    users_attributeModel: require('./users_attribute')
+    attributesModel: require('./attributes'),
+    friendsModel: require('./friends'),
+    rolesModel: require('./roles'),
+    users_friendsModel: require('./users_friends'),
+    users_attributesModel: require('./users_attributes')
 }

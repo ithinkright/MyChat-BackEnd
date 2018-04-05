@@ -5,10 +5,10 @@ async function createUserFriendTable() {
     if (await showTable())
         return;
     const sql = `
-    CREATE TABLE user_friends(
+    CREATE TABLE users_friends(
         userid varchar(255) NOT NULL,
         friendid int NOT NULL,
-        preference varchar(20000) NOT NULL
+        preference varchar(20000)
     );`;
     const values = [];
     return queryDB(sql, values);
@@ -16,7 +16,7 @@ async function createUserFriendTable() {
 
 async function showTable() {
     const sql = `
-        show tables like 'user_friends'
+        show tables like 'users_friends'
     `;
     let flag = true;
     await queryDB(sql, []).then(function(res) {
@@ -24,14 +24,14 @@ async function showTable() {
             flag = false;
     });
     if (flag) {
-      console.log("user_friend table exits")
+      console.log("users_friends table exits")
     }
     return flag;
 }
 
 async function insertUserFriend(user_friend) {
     const sql = `
-    INSERT INTO user_friends (userid, friendid) VALUES (?, ?, ?)
+    INSERT INTO users_friends (userid, friendid, preference) VALUES (?, ?, ?)
     `;
     const values = [user_friend.userid, user_friend.friendid, user_friend.preference];
     return queryDB(sql, values);
@@ -40,8 +40,8 @@ async function insertUserFriend(user_friend) {
 async function findUserFriendById(obj) {
     const sql = `
     SELECT *
-    FROM user_friends
-    WHERE user_friends.userid = (?)
+    FROM users_friends
+    WHERE users_friends.userid = (?)
     `;
     const values = [obj.userid];
     return queryDB(sql, values)
@@ -54,16 +54,16 @@ async function findUserFriendByObj(obj) {
     let values = [];
     for (let key in obj) {
         if (flag) {
-            condition += `user_friends.${key} = ?`;
+            condition += `users_friends.${key} = ?`;
             flag = false;
         } else {
-            condition += ` AND user_friends.${key} = ?`
+            condition += ` AND users_friends.${key} = ?`
         }
         values.push(obj[key])
     }
     const sql = `
         SELECT *
-        FROM user_friends
+        FROM users_friends
         WHERE ${condition}
     `;
     return queryDB(sql, values);
@@ -71,7 +71,7 @@ async function findUserFriendByObj(obj) {
 
 async function deleteFriend(obj) {
     const sql = `
-    DELETE FROM user_friends WHERE user_friends.friendid = (?)
+    DELETE FROM users_friends WHERE users_friends.friendid = (?)
     `
     const values = [obj.friendid];
     return queryDB(sql, values);
@@ -79,9 +79,9 @@ async function deleteFriend(obj) {
 
 async function updatePreference(obj) {
   const sql = `
-      UPDATE user_friends
-      SET user_friends.preference = (?)
-      WHERE user_friends.friendid = (?)
+      UPDATE users_friends
+      SET users_friends.preference = (?)
+      WHERE users_friends.friendid = (?)
   `;
   const values = [obj.preference, obj.friendid];
   return queryDB(sql, values);

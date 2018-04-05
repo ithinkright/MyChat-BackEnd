@@ -1,16 +1,13 @@
-const { usersModel, friendModel, roleModel, user_friendModel, attributeModel } = require('../models')
+const { usersModel, friendsModel, rolesModel, users_friendsModel, attributesModel } = require('../models')
 const { MyChatError, pick, sendRes } = require('../services/MyChatUtils/')
 const { friendsData } = require('../data');
 const fs = require('fs');
 
 async function uploadAvatar(ctx, next) {
     ctx.param = Object.assign(ctx.param, ctx.req.body);
-    console.log(ctx.req.file);
     let res = pick(ctx.param, ['friendid']);
     let avatarPath = `public/friendAvatar/${res.friendid}.jpg`;
     let oldPath = ctx.req.file.path;
-    console.log(fs.existsSync(oldPath))
-    console.log(ctx.req.file);
     try {
         fs.renameSync(oldPath, avatarPath);
         sendRes(ctx)
@@ -35,29 +32,39 @@ async function addFriend(ctx, next) {
 }
 
 async function deleteFriend(ctx, next) {
-    let obj = pick(ctx.param, ['friendid']);
+    let obj = pick(ctx.param, ['userid', 'friendid']);
     let affectedRows = -1;
-    let [friend] = await friendModel.findFriendById({ friendid: obj.friendid });
+    let [friend] = await friendsModel.findFriendById({ friendid: obj.friendid });
     if (!friend) {
         throw new MyChatError(2, "该朋友不存在")
     }
-    await friendModel.deleteFriend({ friendid: friend.friendid });
-    let [user_friend] = await user_friendModel.findUserFriendByObj( { friendid: friend.friendid });
+    await friendsModel.deleteFriend({ friendid: friend.friendid });
+    let [user_friend] = await users_friendsModel.findUserFriendByObj( { friendid: friend.friendid });
     friend.userid = user_friend.userid;
-    await user_friendModel.deleteFriend({ friendid: friend.friendid });
+    await users_friendsModel.deleteFriend({ friendid: friend.friendid });
     let result = { mes: "DELETE SUCCESSFULLY", userid: friend.userid, friendid: friend.friendid };
     sendRes(ctx, result)
     return next()
 }
 
+async function insertOriginFrendsForUser(userid, next) {
+    let data = friendsData.data;
+    for (e in data) {
+        data[e].userid = userid;
+        await setAttribute(data[e]);
+        data[e].friendid = undefined;
+        await insertFriends(data[e]);
+    }
+}
+
 async function getFriends(ctx, next) {
     let user = pick(ctx.param, ['userid']);
-    let user_friend = await user_friendModel.findUserFriendByObj(user);
+    let user_friend = await users_friendsModel.findUserFriendByObj(user);
     let result = [];
     for (let i in user_friend) {
-        let [friend] = await friendModel.findFriendById({ friendid: user_friend[i].friendid });
-        let [attribute] = await attributeModel.findAttributeById({ attributeid: friend.attribute });
-        let [role] = await roleModel.findRoleById({ roleid: friend.roleid });
+        let [friend] = await friendsModel.findFriendById({ friendid: user_friend[i].friendid });
+        let [attribute] = await attributesModel.findAttributeById({ attributeid: friend.attribute });
+        let [role] = await rolesModel.findRoleById({ roleid: friend.roleid });
         friend.attributename = (attribute ? attribute.name : null);
         friend.rolename = (role ? role.name : null);
         friend.friendid = friend.friendid.toString();
@@ -67,14 +74,13 @@ async function getFriends(ctx, next) {
     return next();
 }
 
-
 async function updatePreference(ctx, next) {
     if (!ctx.params.friendid) {
         sendRes(ctx, {result: "设置失败，请重试"});
         throw new MyChatError(2, "好友id有误");
     }
     let obj = ctx.param;
-    let [friend] = await user_friendModel.findUserFriendByObj({ friendid: ctx.params.friendid });
+    let [friend] = await users_friendsModel.findUserFriendByObj({ friendid: ctx.params.friendid });
     if (!friend) {
         throw new MyChatError(2, "好友不存在");
     }
@@ -82,27 +88,16 @@ async function updatePreference(ctx, next) {
         obj = Object.assign(JSON.parse(friend.preference), obj)
     }
     friend.preference = JSON.stringify(obj);
-    await user_friendModel.updatePreference({ friendid: friend.friendid, preference: friend.preference });
+    await users_friendsModel.updatePreference({ friendid: friend.friendid, preference: friend.preference });
     sendRes(ctx, {result: friend})
     return next();
 }
 
-async function getOriginFrends(userid, next) {
-    let data = friendsData.data;
-    for (e in data) {
-          data[e].userid = userid;
-          await setAttribute(data[e]);
-          data[e].friendid = undefined;
-          await insertFriends(data[e]);
-    }
-    return next();
-}
-
 async function insertFriends(friend, next) {
-    await friendModel.insertFriend(friend).then(function(res) {
+    await friendsModel.insertFriend(friend).then(function(res) {
         friend.friendid = res.insertId;
     });
-    let attributeSet = friend.attribute.split(',');
+    let attributeSet = (friend.attribute ? friend.attribute.split(',') : []);
     let first = (attributeSet.length === 0 ? "default" : attributeSet[0]);
     let path = `public/friendAvatar/${first}.png`;
     if (!fs.existsSync(path)) {
@@ -114,23 +109,23 @@ async function insertFriends(friend, next) {
     } catch (e) {
         console.log(e);
     }
-    await user_friendModel.insertUserFriend({ userid: friend.userid, friendid: friend.friendid });
-    return next();
+    await users_friendsModel.insertUserFriend({ userid: friend.userid, friendid: friend.friendid });
 }
 
 async function setAttribute(friend, next) {
-    let [role] = await roleModel.findRoleById({roleid: friend.roleid});
+    let [role] = await rolesModel.findRoleById({roleid: friend.roleid});
     if (friend.roleid && !role) {
+        console.log(friend);
+        console.log(friend.roleid);
         throw new MyChatError(2, "该角色id指向的角色不存在")
     }
     friend.attribute = (role === undefined ? undefined : role.attribute);
-    return next();
 }
 
 exports = module.exports = {
     addFriend,
     deleteFriend,
-    getOriginFrends,
+    insertOriginFrendsForUser,
     updatePreference,
     getFriends,
     uploadAvatar

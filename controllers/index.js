@@ -4,8 +4,6 @@ exports = module.exports = {
     attributesCtrl: require('./attributes'),
     rolesCtrl: require('./roles'),
     dealMessageCtrl: require('./dealMessage'),
-    friends_attributes: require('./friends_attributes'),
-    friends_roles: require('./friends_roles'),
-    weatherCtrl: require('./weather'),
-    verifyCtrl: require('./verify')
+    friends_attributesCtrl: require('./friends_attributes'),
+    friends_rolesCtrl: require('./friends_roles')
 }

@@ -30,6 +30,13 @@ async function showTable() {
     return flag;
 }
 
+async function showAllattributes() {
+    const sql = `
+        SELECT * from attributes
+    `;
+    return queryDB(sql, []);
+}
+
 async function insertAttribute(attribute) {
     const sql = `
     INSERT INTO attributes (attributeid, name, description, usercount) VALUES (?, ?, ?, ?)
@@ -101,6 +108,7 @@ async function deleteAttributeByObj(obj) {
 exports = module.exports = {
     createAttributeTable,
     insertAttribute,
+    showAllattributes,
     findAttributeById,
     findAttributeByObj,
     deleteAttributeById,

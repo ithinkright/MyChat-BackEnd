@@ -1,35 +1,42 @@
-const { roleModel, attributeModel } = require('../models');
+const { rolesModel, attributesModel } = require('../models');
 const { MyChatError, pick, sendRes } = require('../services/MyChatUtils');
 const md5 = require('md5')
 
 async function addRole (ctx, next) {
     let obj = pick(ctx.param, ['name', 'description', 'attribute', 'usercount']);
     obj.roleid = md5(obj.name);
-    let [result] = await roleModel.findRoleByObj(obj);
+    let [result] = await rolesModel.findRoleByObj(obj);
     if (result) {
         throw new MyChatError(2, '角色已存在')
     }
-    let [attribute] = await attributeModel.findAttributeById({ attributeid: obj.attribute });
+    let [attribute] = await attributesModel.findAttributeById({ attributeid: obj.attribute });
     if (!attribute) {
         throw new MyChatError(2, '属性不存在');
     }
-    await roleModel.insertRole(obj);
+    await rolesModel.insertRole(obj);
     sendRes(ctx, obj)
     return next();
 }
 
 async function deleteRole (ctx, next) {
     let obj = pick(ctx.param, ['roleid']);
-    let [result] = await roleModel.findRoleById(obj);
+    let [result] = await rolesModel.findRoleById(obj);
     if (!result) {
         throw new MyChatError(2, '角色不存在')
     }
-    await roleModel.deleteRole(obj);
+    await rolesModel.deleteRole(obj);
     sendRes(ctx, obj)
+    return next();
+}
+
+async function getAllRoles(ctx, next) {
+    let result = await rolesModel.showAllRoles();
+    sendRes(ctx, {data: result});
     return next();
 }
 
 exports = module.exports = {
     addRole,
-    deleteRole
+    deleteRole,
+    getAllRoles
 }

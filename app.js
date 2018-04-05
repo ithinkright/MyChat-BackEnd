@@ -4,12 +4,13 @@ const { loadMiddlewares } = require('./middlewares');
 const { loadRouters } = require('./routes');
 const { runPre } = require('./services/MyChatUtils');
 const socketio = require('./services/socket.io');
-const { usersModel,attributeModel,friendModel,roleModel,user_friendModel,users_attributeModel } = require('./models');
+const { usersModel,attributesModel,friendsModel,rolesModel,users_friendsModel,users_attributesModel } = require('./models');
 const { MyChatError } = require('./services/MyChatUtils');
 const queryDB = require('./services/db');
 const compute = require('./services/Compute/index');
 const translate = require('./services/Translator/youdao');
 const { getOriginFrends } = require('./controllers/friends');
+const { attributesCtrl } = require('./controllers/index');
 (async function bootstrap() {
   try {
     await runPre.testMysql();
@@ -24,6 +25,7 @@ const { getOriginFrends } = require('./controllers/friends');
     server.listen(3000);
     console.log(`服务端程序正在监听3000端口`);
     await createDataBase();
+    await attributesCtrl.insertOriginAttributes();
     //await getOriginFrends("21633e8138c5669902a4bed40ec6516b");
     //await testSql();
   } catch (err) {
@@ -33,15 +35,15 @@ const { getOriginFrends } = require('./controllers/friends');
 
 async function createDataBase() {
     await usersModel.createUserTable();
-    await attributeModel.createAttributeTable();
-    await friendModel.createFriendTable();
-    await roleModel.createRoleTable();
-    await user_friendModel.createUserFriendTable();
-    await users_attributeModel.createUsersAttributeTable();
+    await attributesModel.createAttributeTable();
+    await friendsModel.createFriendTable();
+    await rolesModel.createRoleTable();
+    await users_friendsModel.createUserFriendTable();
+    await users_attributesModel.createUsersAttributeTable();
 }
 
 async function testSql() {
   let obj = {friendid: 8};
-  let [friend] = await friendModel.findFriendById(obj);
+  let [friend] = await friendsModel.findFriendById(obj);
   console.log(friend);
 }

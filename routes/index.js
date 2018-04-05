@@ -4,10 +4,6 @@ function loadRouters(app) {
   app.use(require('./attributes').routes());
   app.use(require('./roles').routes());
   app.use(require('./dealMessage').routes());
-  app.use(require('./friends_attributes').routes());
-  app.use(require('./friends_roles').routes());
-  app.use(require('./weather').routes());
-  app.use(require('./verify').routes());
 }
 
 exports = module.exports = {

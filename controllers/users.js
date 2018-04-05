@@ -1,10 +1,11 @@
-const { usersModel } = require('../models')
-const { getOriginFrends } = require('./friends')
-const getWeather = require('../services/Weather')
-const MyChatSendMail = require('../services/Mail/sendMail');
+const { usersModel, attributesModel, users_attributesModel } = require('../models')
+const { insertOriginFrendsForUser } = require('./friends')
+const { attributesData } = require('../data/index')
 const { MyChatError, pick, sendRes, utils } = require('../services/MyChatUtils/')
+const MyChatSendMail = require('../services/Mail/sendMail');
 const fs = require('fs');
 const md5 = require('md5')
+const weather = require('./weather')
 
 async function uploadAvatar(ctx, next) {
     ctx.param = Object.assign(ctx.param, ctx.req.body);
@@ -25,8 +26,8 @@ async function uploadAvatar(ctx, next) {
 async function gainWeather(ctx, next) {
     let res = pick(ctx.param, ['place']);
     try {
-        let result = await getWeather(res.place);
-        sendRes(ctx, result);
+        let result = await weather.get(res.place);
+        sendRes(ctx, {result: result});
     } catch (e) {
         throw new MyChatError(2, "天气获取失败，请勿频繁获取");
     }
@@ -41,7 +42,8 @@ async function signup(ctx, next) {
         throw new MyChatError(2, '用户名已存在')
     }
     await usersModel.insertUser(user);
-    await getOriginFrends(user.userid);
+    await insertOriginFrendsForUser(user.userid);
+    await insertOriginAttributesForUser(user.userid);
     let avatarPath = `public/avatar/${user.userid}.jpg`;
     try {
         fs.copyFileSync("public/images/default.png", avatarPath);
@@ -85,10 +87,55 @@ async function gainCode(ctx, next) {
     }
     return next();
 }
+
+async function addAttributes(ctx, next) {
+    let obj = pick(ctx.param, ['attributeid']);
+    obj.userid = ctx.params.userid;
+    let [attribute] = await attributesModel.findAttributeById(obj);
+    if (!attribute) {
+        sendRes(ctx, {result: "Fail"});
+        throw new MyChatError("属性不存在");
+    }
+    let [user_attribute] = await users_attributesModel.findUsersAttributeByObj(obj);
+    if (user_attribute) {
+        sendRes(ctx, {result: "Fail"});
+        throw new MyChatError("这个好友已经拥有此属性");
+    }
+    await users_attributesModel.insertUsersAttribute(obj);
+    let result = await users_attributesModel.findUsersAttributeById(obj);
+    sendRes(ctx, {result: result});
+    return next();
+}
+
+
+async function deleteAttributes(ctx, next) {
+    let obj = pick(ctx.param, ['attributeid']);
+    obj.userid = ctx.params.userid;
+    let [user_attribute] = await users_attributesModel.findUsersAttributeByObj(obj);
+    if (!user_attribute) {
+        sendRes(ctx, {result: "Fail"});
+        throw new MyChatError("这个好友不拥有此属性");
+    }
+    await users_attributesModel.deleteUsersAttributeByAttributeId(obj);
+    let result = await users_attributesModel.findUsersAttributeById(obj);
+    sendRes(ctx, {result: result});
+    return next();
+}
+
+async function insertOriginAttributesForUser(userid) {
+    let data = attributesData.data;
+    for (e in data) {
+        let [attribute] = await attributesModel.findAttributeByObj({name : data[e].name});
+        users_attributesModel.insertUsersAttribute({userid: userid, attributeid: attribute.attributeid});
+    }
+}
+
 exports = module.exports = {
     signup,
     signin,
     uploadAvatar,
     gainCode,
-    gainWeather
+    gainWeather,
+    addAttributes,
+    deleteAttributes
 }

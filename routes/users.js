@@ -20,4 +20,8 @@ router.post('/signup', usersCtrl.signup)
 router.post('/weather', usersCtrl.gainWeather)
 //获取邮箱验证码
 router.post('/auth', usersCtrl.gainCode)
+
+router.post('/:userid/attributes', usersCtrl.addAttributes)
+
+router.delete('/:userid/attributes', usersCtrl.deleteAttributes)
 exports = module.exports = router

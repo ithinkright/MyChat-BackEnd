@@ -7,9 +7,9 @@ async function createUsersAttributeTable() {
     if (await showTable())
         return;
     const sql = `
-    CREATE TABLE users_attribute(
+    CREATE TABLE users_attributes(
         userid varchar(255) NOT NULL,
-        attributeid varchar(255) NOT NULL check(name != '')
+        attributeid varchar(255) NOT NULL
     );`;
     const values = [];
     return queryDB(sql, values);
@@ -17,7 +17,7 @@ async function createUsersAttributeTable() {
 
 async function showTable() {
     const sql = `
-        show tables like 'users_attribute'
+        show tables like 'users_attributes'
     `;
     let flag = true;
     await queryDB(sql, []).then(function(res) {
@@ -25,14 +25,14 @@ async function showTable() {
             flag = false;
     });
     if (flag) {
-      console.log("users_attribute table exits")
+      console.log("users_attributes table exits")
     }
     return flag;
 }
 
 async function insertUsersAttribute(users_attribute) {
     const sql = `
-    INSERT INTO users_attribute (userid, attributeid) VALUES (?, ?)
+    INSERT INTO users_attributes (userid, attributeid) VALUES (?, ?)
     `;
     const values = [users_attribute.userid, users_attribute.attributeid];
     return queryDB(sql, values);
@@ -41,8 +41,8 @@ async function insertUsersAttribute(users_attribute) {
 async function findUsersAttributeById(obj) {
     const sql = `
     SELECT *
-    FROM users_attribute
-    WHERE users_attribute.userid = (?)
+    FROM users_attributes
+    WHERE users_attributes.userid = (?)
     `;
     const values = [obj.userid];
     return queryDB(sql, values)
@@ -55,16 +55,16 @@ async function findUsersAttributeByObj(obj) {
     let values = [];
     for (let key in obj) {
         if (flag) {
-            condition += `users_attribute.${key} = ?`;
+            condition += `users_attributes.${key} = ?`;
             flag = false;
         } else {
-            condition += ` AND users_attribute.${key} = ?`
+            condition += ` AND users_attributes.${key} = ?`
         }
         values.push(obj[key])
     }
     const sql = `
         SELECT *
-        FROM users_attribute
+        FROM users_attributes
         WHERE ${condition}
     `;
     return queryDB(sql, values);
@@ -72,7 +72,7 @@ async function findUsersAttributeByObj(obj) {
 
 async function deleteUsersAttributeByUserId(obj) {
     const sql = `
-    DELETE FROM users_attribute WHERE users_attribute.userid = (?)
+    DELETE FROM users_attributes WHERE users_attributes.userid = (?)
     `;
     const values = [obj.userid];
     return queryDB(sql, values)
@@ -80,7 +80,7 @@ async function deleteUsersAttributeByUserId(obj) {
 
 async function deleteUsersAttributeByAttributeId(obj) {
     const sql = `
-    DELETE FROM users_attribute WHERE users_attribute.attributeid = (?)
+    DELETE FROM users_attributes WHERE users_attributes.attributeid = (?)
     `;
     const values = [obj.attributeid];
     return queryDB(sql, values)
