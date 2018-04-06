@@ -27,6 +27,7 @@ async function addFriend(ctx, next) {
     }
     await setAttribute(friend);
     await insertFriends(friend);
+    friend.friendid = friend.friendid.toString();
     sendRes(ctx, friend)
     return next()
 }
