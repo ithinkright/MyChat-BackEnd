@@ -3,12 +3,12 @@ const http = require('http')
 const { loadMiddlewares } = require('./middlewares');
 const { loadRouters } = require('./routes');
 const { runPre } = require('./services/MyChatUtils');
-const socketio = require('./services/socket.io');
+// const socketio = require('./services/socket.io');
 const { usersModel,attributesModel,friendsModel,rolesModel,users_friendsModel,users_attributesModel } = require('./models');
 const { MyChatError } = require('./services/MyChatUtils');
 const queryDB = require('./services/db');
-const compute = require('./services/Compute/index');
-const translate = require('./services/Translator/youdao');
+// const compute = require('./services/Compute/index');
+// const translate = require('./services/Translator/youdao');
 const { getOriginFrends } = require('./controllers/friends');
 const { attributesCtrl } = require('./controllers/index');
 (async function bootstrap() {
