@@ -22,6 +22,7 @@ async function assignRole(ctx, next) {
     temp = mdAttr.merge(temp, role.attribute);
     await friendsModel.modifyAttribute({ friendid: obj.friendid, attributeid: temp });
     [friend] = await friendsModel.findFriendById({ friendid: obj.friendid });
+    friend.friendid = friend.friendid.toString();
     sendRes(ctx, friend)
     return next();
 }
@@ -44,6 +45,7 @@ async function removeRole(ctx, next) {
     let temp = mdAttr.remove(friend.attribute, role.attribute);
     await friendsModel.modifyAttribute({ friendid: obj.friendid, attributeid: temp });
     [friend] = await friendsModel.findFriendById({ friendid: obj.friendid });
+    friend.friendid = friend.friendid.toString();
     sendRes(ctx, friend)
     return next();
 }

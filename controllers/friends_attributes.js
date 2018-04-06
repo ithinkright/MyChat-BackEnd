@@ -15,6 +15,7 @@ async function addAttribute (ctx, next) {
     let newAttribute = mdAttr.merge(friend.attribute, attribute.attributeid);
     await friendsModel.modifyAttribute({ friendid: obj.friendid, attributeid: newAttribute });
     let [result] = await friendsModel.findFriendById({ friendid: obj.friendid });
+    result.friendid = result.friendid.toString();
     sendRes(ctx, result)
     return next();
 }
@@ -33,6 +34,7 @@ async function deleteAttribute (ctx, next) {
     let newAttribute = mdAttr.remove(friend.attribute, attribute.attributeid);
     await friendsModel.modifyAttribute({ friendid: obj.friendid, attributeid: newAttribute });
     let [result] = await friendsModel.findFriendById({ friendid: obj.friendid });
+    result.friendid = result.friendid.toString();
     sendRes(ctx, result);
     return next();
 }
