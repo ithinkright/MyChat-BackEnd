@@ -12,7 +12,7 @@ let testObj = {
 
 let testobj1 = {
     username: "1042651820@qq.com",
-    password: "abcd",
+    password: "pdyyhgnzeztxbbgc",
     host: 'imap.qq.com'
 }
 
@@ -27,22 +27,31 @@ async function testEmail(username, password) {
     password: password,
     host: "imap.qq.com"
   }
-  return testMail(obj);
+  try {
+    let result = await testMail(obj);
+    console.log(1)
+    return 1;
+  }
+  catch(e) {
+    console.log(0)
+    return 0;
+  }
 }
 
 async function sendEmail(obj) {
-  obj.service = '163';
-  return new Promise(function (resolve, reject) {
-    MyChatSendMail(obj).then(function(value) {
-        resolve(1);
-    }, function(error) {
-        reject(0);
-    })
-  })
+  obj.service = 'qq';
+  try {
+    await MyChatSendMail(obj);
+    return 1;
+  }
+  catch(e) {
+    console.log(e);
+    return 0;
+  }
 }
 
 async function test () {
-    let result = await sendEmail(testObj);
+    let result = await testEmail(testobj1.username, testobj1.password);
     console.log(result);
 }
 
