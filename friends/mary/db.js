@@ -13,14 +13,21 @@ function createDiary(userid, time, location, people, event) {
   return queryDb(sql, values);
 }
 
-function findDiariesByDate(date) {
-  const sql = `SELECT * FROM diary WHERE date = ?;`;
-  const values = [date];
+function findDiaryByDate(userid, date) {
+  const sql = `SELECT * FROM diary WHERE userid = ? AND date = ?;`;
+  const values = [userid, date];
+  return queryDb(sql, values);
+}
+
+function findDiaryByDates(userid, before, after) {
+  const sql = `SELECT * FROM diary WHERE userid = ? AND date >= ? AND date <= ?;`;
+  const values = [userid, before, after];
   return queryDb(sql, values);
 }
 
 exports = module.exports = {
   createUser,
   createDiary,
-  findDiariesByDate,
+  findDiaryByDate,
+  findDiaryByDates,
 };
