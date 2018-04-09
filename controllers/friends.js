@@ -27,6 +27,7 @@ async function addFriend(ctx, next) {
     }
     await setAttribute(friend);
     await insertFriends(friend);
+    friend.friendid = friend.friendid.toString();
     sendRes(ctx, friend)
     return next()
 }
@@ -42,7 +43,7 @@ async function deleteFriend(ctx, next) {
     let [user_friend] = await users_friendsModel.findUserFriendByObj( { friendid: friend.friendid });
     friend.userid = user_friend.userid;
     await users_friendsModel.deleteFriend({ friendid: friend.friendid });
-    let result = { mes: "DELETE SUCCESSFULLY", userid: friend.userid, friendid: friend.friendid };
+    let result = { mes: "DELETE SUCCESSFULLY", userid: friend.userid, friendid: friend.friendid.toString() };
     sendRes(ctx, result)
     return next()
 }
@@ -89,6 +90,7 @@ async function updatePreference(ctx, next) {
     }
     friend.preference = JSON.stringify(obj);
     await users_friendsModel.updatePreference({ friendid: friend.friendid, preference: friend.preference });
+    friend.friendid = friend.friendid.toString();
     sendRes(ctx, {result: friend})
     return next();
 }

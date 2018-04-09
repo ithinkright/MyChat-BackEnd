@@ -11,6 +11,10 @@ async function process(ctx, next) {
     if (!friend) {
         throw new MyChatError(2, '该朋友不存在');
     }
+    if (!friend.attribute) {
+        sendRes(ctx, {result: result});
+        return;
+    }
     let choice = friend.attribute.split(',')[0];
     switch (choice) {
       case "35b4b419fa4b8c97858f967daf196f96":

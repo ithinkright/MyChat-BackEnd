@@ -24,6 +24,11 @@ data = [
       name: "查天气",
       description: "查询天气",
       usercount: "33333"
+  },
+  {
+      name: "Mary",
+      description: "汤姆和玛丽",
+      usercount: "11111"
   }
 ]
 
