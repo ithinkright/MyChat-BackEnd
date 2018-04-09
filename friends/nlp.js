@@ -34,7 +34,7 @@ function analyseItems(items_) {
       result.location = item['item'];
     }
     // people
-    if (item['ne'] === 'PER' || item['ne'] === 'ORG' || item['pos'] === 'nr' || item['pos'] === 'nt') {
+    if (item['ne'] === 'PER' || item['ne'] === 'ORG' || item['pos'] === 'nr' || item['pos'] === 'nt' || item['pos' === 'r']) {
       if (!result.people) result.people = [];
       result.people.push(item['item']);
     }
@@ -53,6 +53,7 @@ function analyseItems(items_) {
     }
   }
 
+  console.log(result);
   return result;
 }
 
@@ -105,9 +106,7 @@ async function lexicalAnalyse(message) {
   const data = res.data;
   if (data.error_code) throw new Error(data.error_msg);
   const result = analyseItems(data.items);
-  if (result.date) {
-    result.date = await timeNlp(message);
-  }
+  console.log(result);
   return result;
 }
 
