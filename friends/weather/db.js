@@ -1,4 +1,4 @@
-const options = require('../config').translator.mysql;
+const options = require('../config').weather.mysql;
 const queryDb = require('../mysql').getQueryDb(options);
 
 function findUserById(userid) {
