@@ -35,6 +35,12 @@ data = [
       gender: "female",
       birth: (new Date()).toLocaleDateString(),
       roleid: null
+  },
+  {
+      friendname: "Mary",
+      gender: "female",
+      birth: (new Date()).toLocaleDateString(),
+      roleid: "e39e74fb4e80ba656f773669ed50315a"
   }
 ]
 
