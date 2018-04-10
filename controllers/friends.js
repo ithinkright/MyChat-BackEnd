@@ -63,13 +63,18 @@ async function getFriends(ctx, next) {
     let user_friend = await users_friendsModel.findUserFriendByObj(user);
     let result = [];
     for (let i in user_friend) {
-        let [friend] = await friendsModel.findFriendById({ friendid: user_friend[i].friendid });
-        let [attribute] = await attributesModel.findAttributeById({ attributeid: friend.attribute });
-        let [role] = await rolesModel.findRoleById({ roleid: friend.roleid });
-        friend.attributename = (attribute ? attribute.name : null);
-        friend.rolename = (role ? role.name : null);
-        friend.friendid = friend.friendid.toString();
-        result.push(friend);
+        try {
+            let [friend] = await friendsModel.findFriendById({ friendid: user_friend[i].friendid });
+            let [attribute] = await attributesModel.findAttributeById({ attributeid: friend.attribute });
+            let [role] = await rolesModel.findRoleById({ roleid: friend.roleid });
+            friend.attributename = (attribute ? attribute.name : null);
+            friend.rolename = (role ? role.name : null);
+            friend.friendid = friend.friendid.toString();
+            result.push(friend);
+        }
+        catch(e) {
+          console.log(e)
+        }
     }
     sendRes(ctx, {data: result});
     return next();
