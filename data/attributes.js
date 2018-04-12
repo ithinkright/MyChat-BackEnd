@@ -1,27 +1,27 @@
 
 data = [
   {
-      name: "翻译",
+      name: "translate",
       description: "翻译",
       usercount: "33333"
   },
   {
-      name: "计算",
+      name: "compute",
       description: "给我一个支点我能撬动整个地球",
       usercount: "6666"
   },
   {
-      name: "发邮件",
+      name: "email",
       description: "连接你和我",
       usercount: "33333"
   },
   {
-      name: "记录",
+      name: "secure",
       description: "记录生活的美好",
       usercount: "20000"
   },
   {
-      name: "查天气",
+      name: "Weather",
       description: "查询天气",
       usercount: "33333"
   },
