@@ -3,7 +3,7 @@ const api = require('./api');
 const db = require('./db');
 const config = require('../config');
 
-const preference = {};
+const users = {};
 const mail = {};
 const help = '对我说\"发邮件\"就可以发一封邮件，其他功能敬请期待！';
 
@@ -14,11 +14,11 @@ io.on('connection', (socket) => {
     console.log(data);
     const { userid } = data;
     const [user] = await db.findUserById(userid);
-    if (!user || user.accounts === null) {
-      await db.createUser(userid);
-      preference[userid] = {
+    if (!user || user.account === null) {
+      db.createUser(userid);
+      users[userid] = {
         status: 'username',
-        data: { vendor: 'QQ' },
+        account: { vendor: 'QQ' },
       };
       socket.emit('messages', {
         messages: [
@@ -27,10 +27,9 @@ io.on('connection', (socket) => {
         ],
       });
     } else {
-      const accounts = JSON.parse(user.accounts);
-      preference[userid] = {
+      users[userid] = {
         status: 'done',
-        data: accounts[0],
+        account: JSON.parse(user.account),
       };
       // mail[userid] = { status: 'to', data: {} };
       // socket.emit('message', { message: '你要发邮件给谁？' });
@@ -40,25 +39,25 @@ io.on('connection', (socket) => {
   socket.on('message', async (data) => {
     console.log(data);
     const { userid, message } = data;
-    if (preference[userid].status !== 'done') {
-      const { status } = preference[userid];
+    if (users[userid].status !== 'done') {
+      const { status } = users[userid];
       if (status === 'username') {
         if (api.validateEmail(message)) {
-          preference[userid].data['username'] = message;
-          preference[userid].status = 'password';
+          users[userid].account['username'] = message;
+          users[userid].status = 'password';
           socket.emit('message', { message: 'OK，我还需要知道你的授权码（放心我一定会保密哈）' });
         } else {
           socket.emit('message', { message: '邮箱账号格式不对哦，再试一下吧' });
         }
       } else if (status === 'password') {
-        const username = preference[userid].data['username'];
+        const username = users[userid].account['username'];
         const password = message;
         const testEmail = await api.testEmail(username, password);
         if (testEmail) {
-          preference[userid].data['password'] = password;
-          const account = preference[userid].data;
-          await db.updateAccounts(userid, JSON.stringify(account));
-          preference[userid].status = 'done';
+          users[userid].account['password'] = password;
+          const account = users[userid].account;
+          await db.updateAccount(userid, JSON.stringify(account));
+          users[userid].status = 'done';
           socket.emit('message', { message: '添加成功！试一下跟我说\"发邮件\"' });
         } else {
           socket.emit('message', { message: '授权码不对耶，再试一下吧' });
@@ -73,19 +72,20 @@ io.on('connection', (socket) => {
         if (status === 'to') {
           if (api.validateEmail(message)) {
             mail[userid].data['to'] = message;
-            mail[userid].status = 'subject';
+            mail[userid].status = 'title';
             socket.emit('message', { message: '邮件的主题是什么？' });
           } else {
             socket.emit('message', { message: '邮箱账号格式不对哦，再试一下吧' })
           }
-        } else if (status === 'subject') {
-          mail[userid].data['subject'] = message;
-          mail[userid].status = 'content';
+        } else if (status === 'title') {
+          mail[userid].data['title'] = message;
+          mail[userid].status = 'text';
           socket.emit('message', { message: '邮件的内容是？' });
-        } else if (status === 'content') {
-          mail[userid].data['content'] = message;
-          const { to, subject, content } = mail[userid].data;
-          const sent = await api.sendEmail(to, subject, content);
+        } else if (status === 'text') {
+          mail[userid].data['text'] = message;
+          const { to, title, text } = mail[userid].data;
+          const { username, password } = users[userid].account;
+          const sent = await api.sendEmail({ to, title, text, username, password });
           if (sent) {
             socket.emit('message', { message: '发送成功！' });
           } else {

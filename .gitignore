@@ -61,3 +61,10 @@ typings/
 # dotenv environment variables file
 .env
 
+# VS Code
+.vscode
+
+# python cache
+time-nlp/__pycache__
+
+test.js

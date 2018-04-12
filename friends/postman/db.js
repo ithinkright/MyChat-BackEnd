@@ -8,19 +8,19 @@ function findUserById(userid) {
 }
 
 function createUser(userid) {
-  const sql = `INSERT INTO user (userid, last_time) VALUES (?, ?);`;
-  const values = [userid, new Date()];
+  const sql = `INSERT INTO user (userid) VALUES (?);`;
+  const values = [userid];
   return queryDb(sql, values);
 }
 
-function updateAccounts(userid, accounts) {
-  const sql = `UPDATE user SET accounts = ? WHERE userid = ?;`;
-  const values = [accounts, userid];
+function updateAccount(userid, account) {
+  const sql = `UPDATE user SET account = ? WHERE userid = ?;`;
+  const values = [account, userid];
   return queryDb(sql, values);
 }
 
 exports = module.exports = {
   findUserById,
   createUser,
-  updateAccounts,
+  updateAccount,
 };
