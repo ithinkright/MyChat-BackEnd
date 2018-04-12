@@ -5,10 +5,9 @@ const util = require('../util');
 const config = require('../config');
 const { lexicalAnalyse, timeNlp } = require('../nlp');
 
-
 const users = {};
-const hello = 'Hello，恭喜你 get 小秘书一枚～对我说\"提醒我XX去XX\"可以帮你设置提醒事项。另外，\"查看XX的日程\"可以查询日程';
-const help = '\"提醒我XX去开会\"可以帮你设置提醒事项。另外，\"查看XX的日程\"可以查询日程';
+const hello = 'Hello，恭喜你 get 小秘书一枚～对我说\"提醒我 XX 去 XX \"可以帮你设置提醒事项。另外，\"查看 XX 的日程\"可以查询日程';
+const help = '\"提醒我 XX 去开会\"可以帮你设置提醒事项。另外，\"查看 XX 的日程\"可以查询日程';
 
 const io = require('socket.io')(server, config.io);
 
@@ -41,6 +40,7 @@ io.on('connection', (socket) => {
       }
       const event = message.substr(pos + 1, message.length - pos);
       db.createReminder(userid, time, event, message);
+      api.remind(userid, time, event);
       socket.emit('message', { message: '好的，到时提醒你' });
     } else {
       let reminders;

@@ -1,4 +1,4 @@
-const options = require('../config').postman.mysql;
+const options = require('../config').secretary.mysql;
 const queryDb = require('../mysql').getQueryDb(options);
 
 function findUserById(userid) {
