@@ -19,7 +19,7 @@ io.on('connection', (socket) => {
       socket.emit('message', { message: 'Hello，初次见面，需要知道你住在哪座城市~' });
     } else {
       users[userid] = user;
-      if (!isToday(user.last_time)) {
+      if (!api.isToday(user.last_time)) {
         const weather = await api.getWeather(user.location);
         socket.emit('message', { message: weather });
       }
@@ -30,8 +30,13 @@ io.on('connection', (socket) => {
   socket.on('message', async (data) => {
     console.log(data);
     const { userid, message: location } = data;
-    const is_new_user = users[userid].location === null;
-    const weather = await api.getWeather(user.location);
+    const user = users[userid];
+    const is_new_user = user.location === null;
+    if (is_new_user) {
+      await db.updateLocation(userid, location);
+      users[userid].location = location;
+    }
+    const weather = await api.getWeather(location);
     socket.emit('message', { message: weather });
     db.updateLocation(userid, location);
   });

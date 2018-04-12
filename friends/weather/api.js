@@ -1,7 +1,9 @@
 const axios = require('axios');
 const md5 = require('md5');
 var to_json = require('xmljson').to_json;
+
 async function getWeather(place) {
+  console.log(place);
   let result = await axios({
     url: 'https://www.sojson.com/open/api/weather/xml.shtml',
     headers: {
@@ -16,6 +18,7 @@ async function getWeather(place) {
       if (err) {
         reject(err);
       } else {
+        console.log(data);
         resolve(stringifyWeather(data));
       }
     });
@@ -54,6 +57,14 @@ function stringifyWeather(obj) {
   return str;
 }
 
+function isToday(date) {
+  const now = new Date();
+  return now.getFullYear() === date.getFullYear() &&
+         now.getMonth() === date.getMonth() &&
+         now.getDate() === date.getDate();
+}
+
 exports = module.exports = {
-  getWeather
+  getWeather,
+  isToday,
 };
