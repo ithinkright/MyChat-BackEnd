@@ -34,11 +34,14 @@ function setSocket(server) {
     // })
 }
 
-function sendMessages(userid, messages) {
+function sendMessages(friendid, userid, messages) {
   if (!messages || messages.length === 0) return;
   if (!sockets.has(userid)) return;
   const socket = sockets.get(userid);
-  socket.emit('messages', messages);
+  socket.emit('messages', {
+    friendid,
+    messages,
+  });
 }
 
 exports = module.exports = {
