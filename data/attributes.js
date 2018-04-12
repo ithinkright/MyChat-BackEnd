@@ -16,7 +16,7 @@ data = [
       usercount: "33333"
   },
   {
-      name: "secure",
+      name: "secretary",
       description: "记录生活的美好",
       usercount: "20000"
   },
@@ -29,6 +29,11 @@ data = [
       name: "Mary",
       description: "汤姆和玛丽",
       usercount: "11111"
+  },
+  {
+      name: "SanXing",
+      description: "每天三个问题",
+      usercount: 10000
   }
 ]
 
