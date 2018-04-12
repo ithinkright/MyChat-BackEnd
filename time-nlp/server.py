@@ -13,8 +13,7 @@ def hello():
 @app.route('/', methods=['POST'])
 def time_nlp():
   data = request.get_data()
-  data.decode("utf-8")
-  param = json.loads(data)
+  param = json.loads(data.decode('utf-8'))
   time = param['time']
   parse_res = json.loads(tn.parse(target=time))
   res = {}
