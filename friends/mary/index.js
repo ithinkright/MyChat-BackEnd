@@ -24,7 +24,9 @@ io.on('connection', (socket) => {
     console.log(data);
     const { userid, message } = data;
     const result = await lexicalAnalyse(message);
-    const dates = await timeNlp(message);
+    let dates;
+    try { dates = await timeNlp(message); }
+    catch (err) { dates = [new Date()]; }
     if (api.isQuestion(message) && result.date) {
       let diaries;
       if (dates.length === 1) {
@@ -39,11 +41,11 @@ io.on('connection', (socket) => {
         socket.emit('message', { message: `Sorry，查不到${result.date}你做了什么` });
         return;
       }
-      let response_message = `这是你在${result.date}的日记：`;
+      const messages = [`这是你在${result.date}的日记：`];
       for (const diary of diaries) {
-        response_message += `\n${diary.origin}`;
+        messages.push(diary.origin);
       }
-      socket.emit('message', { message: response_message });
+      socket.emit('messages', { messages });
     } else {
       const { location, people, event } = result;
       if (!people && !event) {

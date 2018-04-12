@@ -66,4 +66,15 @@ exports = module.exports = {
       connectionLimit: 10,
     },
   },
+
+  sanxing: {
+    port: 3007,
+    mysql: {
+      host: '139.199.174.146',
+      user: 'MyChatOwner',
+      password: 'WoJueDeDui',
+      database: 'MyChat-sanxing',
+      connectionLimit: 10,
+    },
+  },
 };

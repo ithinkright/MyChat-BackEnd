@@ -1,17 +1,6 @@
 const axios = require('axios');
-const moment = require('moment');
-
 const access_token = '24.624c6bd23456a029884d1aebbd87a4d8.2592000.1524062832.282335-10929395';
-
 // https://cloud.baidu.com/doc/NLP/NLP-API.html#.E8.AF.8D.E6.B3.95.E5.88.86.E6.9E.90.E6.8E.A5.E5.8F.A3
-
-function format(date) {
-  return moment(date).format('YYYY-MM-DD HH:mm:ss');
-}
-
-function formatDate(date) {
-  return moment(date).format('YYYY-MM-DD');
-}
 
 function analyseItems(items_) {
   const result = {};
@@ -62,7 +51,7 @@ async function timeNlp(message) {
   const res = await axios.post(url, { time: message });
   const { result } = res.data;
   const ret = [];
-  if (result.error) return [new Date()];
+  if (result.error) throw new Error(result.error);
   if (result.type === 'timestamp') {
     ret.push(new Date(result.timestamp));
   } else if (result.type === 'timedelta') {

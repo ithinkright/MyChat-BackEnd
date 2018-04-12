@@ -30,11 +30,11 @@ async function testEmail(username, password) {
   try {
     let result = await testMail(obj);
     console.log(1)
-    return 1;
+    return true;
   }
   catch(e) {
     console.log(0)
-    return 0;
+    return false;
   }
 }
 
