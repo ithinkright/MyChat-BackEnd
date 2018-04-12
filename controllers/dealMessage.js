@@ -6,13 +6,12 @@ const weatherCtrl = require('./weather');
 
 async function process(ctx, next) {
     let obj = pick(ctx.param, ['friendid', 'mes']);
-    let result = "更多功能请升级为MyChat尊享会员";
+    let result = undefined;
     let [friend] = await friendsModel.findFriendById({ friendid: obj.friendid });
     if (!friend) {
         throw new MyChatError(2, '该朋友不存在');
     }
     if (!friend.attribute) {
-        sendRes(ctx, {result: result});
         return;
     }
     let choice = friend.attribute.split(',')[0];
@@ -43,7 +42,8 @@ async function process(ctx, next) {
         break;
       // 小秘 做点自动回复的好玩东西
     }
-    sendRes(ctx, {result: result});
+    if (result)
+      sendRes(ctx, {result: result});
 }
 
 exports = module.exports = {
