@@ -16,12 +16,7 @@ io.on('connection', (socket) => {
 
     if (!users[userid]) {
       const [user] = await db.findUserById(userid);
-      if (user.account) {
-        users[userid] = {
-          status: 'done',
-          account: JSON.parse(user.account),
-        };
-      } else {
+      if (!user || !user.account) {
         users[userid] = {
           status: 'username',
           account: { vendor: 'QQ' },
@@ -32,6 +27,11 @@ io.on('connection', (socket) => {
             '请问你的 QQ 邮箱账号是？',
           ],
         });
+      } else {
+        users[userid] = {
+          status: 'done',
+          account: JSON.parse(user.account),
+        };
       }
     }
   });
