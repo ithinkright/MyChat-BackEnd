@@ -52,6 +52,8 @@ io.on('connection', (socket) => {
       if (users[userid].question_number !== 3) {
         const { question } = users[userid].questions[users[userid].question_number];
         socket.emit('message', { message: question });
+      } else {
+        socket.emit('message', { message: '好哒，通过你这三个回答，小醒会更加了解你的！请期待属于你的三醒周报吧～' });
       }
     }
   });

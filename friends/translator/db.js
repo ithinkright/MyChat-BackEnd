@@ -8,8 +8,8 @@ function findUserById(userid) {
 }
 
 function createUser(userid) {
-  const sql = `INSERT INTO user (userid, last_time) VALUES (?, ?);`;
-  const values = [userid, new Date()];
+  const sql = `INSERT INTO user (userid) VALUES (?);`;
+  const values = [userid];
   return queryDb(sql, values);
 }
 

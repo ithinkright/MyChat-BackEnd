@@ -13,26 +13,26 @@ io.on('connection', (socket) => {
   socket.on('hello', async (data) => {
     console.log(data);
     const { userid } = data;
-    const [user] = await db.findUserById(userid);
-    if (!user || user.account === null) {
-      db.createUser(userid);
-      users[userid] = {
-        status: 'username',
-        account: { vendor: 'QQ' },
-      };
-      socket.emit('messages', {
-        messages: [
-          'Hello，这是咱们第一次见面。你先得添加一个邮箱账户（目前只支持 QQ 邮箱）才能使用此服务。',
-          '请问你的 QQ 邮箱账号是？',
-        ],
-      });
-    } else {
-      users[userid] = {
-        status: 'done',
-        account: JSON.parse(user.account),
-      };
-      // mail[userid] = { status: 'to', data: {} };
-      // socket.emit('message', { message: '你要发邮件给谁？' });
+
+    if (!users[userid]) {
+      const [user] = await db.findUserById(userid);
+      if (user.account) {
+        users[userid] = {
+          status: 'done',
+          account: JSON.parse(user.account),
+        };
+      } else {
+        users[userid] = {
+          status: 'username',
+          account: { vendor: 'QQ' },
+        };
+        socket.emit('messages', {
+          messages: [
+            'Hello，这是咱们第一次见面。你先得添加一个邮箱账户（目前只支持 QQ 邮箱）才能使用此服务。',
+            '请问你的 QQ 邮箱账号是？',
+          ],
+        });
+      }
     }
   });
 
