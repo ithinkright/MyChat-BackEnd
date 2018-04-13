@@ -22,10 +22,6 @@ function setSocket(server) {
     socket.on('hello', function (data) {
       console.log(data);
       const { userid } = data;
-      setInterval(async () => {
-        const is_online = await testOnline(userid);
-        console.log(new Date(), is_online);
-      }, 5000);
       sockets.set(userid, socket);
     });
   });
@@ -72,7 +68,7 @@ async function sendMessages(friendid, userid, messages) {
       messages,
     });
   } else {
-    pushNotificetion(userid, messages.length, friendid, messages);
+    pushNotificetion(userid, friendid, messages);
   }
 }
 

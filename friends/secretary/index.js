@@ -15,9 +15,6 @@ io.on('connection', (socket) => {
   socket.on('hello', async (data) => {
     console.log(data);
     const { userid, friendid } = data;
-    setInterval(() => {
-      api.remind(friendid, userid, new Date(), '吃屎');
-    }, 5000);
     const [user] = await db.findUserById(userid);
     if (!user) {
       db.createUser(userid);
