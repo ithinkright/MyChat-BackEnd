@@ -12,6 +12,7 @@ const translate = require('./services/Translator/youdao');
 const { getOriginFrends } = require('./controllers/friends');
 const { attributesCtrl } = require('./controllers/index');
 require('./friends');
+require('./services/apns');
 
 (async function bootstrap() {
   try {
