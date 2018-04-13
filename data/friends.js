@@ -40,7 +40,7 @@ data = [
       friendname: "Mary",
       gender: "female",
       birth: (new Date()).toLocaleDateString(),
-      roleid: "889b2b111b4bc3adb722f0fcff480901"
+      roleid: "e39e74fb4e80ba656f773669ed50315a"
   },
   {
       friendname: "三醒",
