@@ -1,4 +1,5 @@
 const apn = require("apn");
+const path = require('path');
 const { findFriendByObj } = require('../../models/friends');
 
 // const device_token = '527325efaa9bded0a682e2e001ade4213f682449fca25f117be11887c30b70d4';
@@ -6,7 +7,7 @@ const tokens = new Map();
 const badges = new Map();
 const provider = new apn.Provider({
   token: {
-    key: '/Users/raincome/codespace/projects/mychat/MyChat-BackEnd/config/AuthKey_H8DPF75JW9.p8',
+    key: `${__dirname}/../../config/AuthKey_H8DPF75JW9.p8`,
     keyId: 'H8DPF75JW9',
     teamId: 'H34D54V7L7',
   },
