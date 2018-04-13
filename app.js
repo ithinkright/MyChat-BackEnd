@@ -11,6 +11,8 @@ const compute = require('./services/Compute/index');
 const translate = require('./services/Translator/youdao');
 const { getOriginFrends } = require('./controllers/friends');
 const { attributesCtrl } = require('./controllers/index');
+require('./friends');
+
 (async function bootstrap() {
   try {
     await runPre.testMysql();

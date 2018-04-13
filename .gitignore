@@ -39,7 +39,7 @@ build/Release
 node_modules/
 jspm_packages/
 
-config/mysql.js
+# config/mysql.js
 # Typescript v1 declaration files
 typings/
 
@@ -61,3 +61,10 @@ typings/
 # dotenv environment variables file
 .env
 
+# VS Code
+.vscode
+
+# python cache
+time-nlp/__pycache__
+
+test.js

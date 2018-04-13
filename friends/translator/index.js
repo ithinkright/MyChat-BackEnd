@@ -3,8 +3,8 @@ const api = require('./api');
 const db = require('./db');
 const config = require('../config');
 
-const language = {};
-const help = '\"换成XX\"就可以切换翻译的目标语言为！';
+const users = {};
+const help = '\"换成XX\"就可以切换翻译的目标语言！';
 
 const io = require('socket.io')(server, config.io);
 
@@ -14,10 +14,10 @@ io.on('connection', (socket) => {
     const { userid } = data;
     const [user] = await db.findUserById(userid);
     if (!user) {
-      await db.createUser(userid);
-      language[userid] = 'EN';
+      db.createUser(userid);
+      users[userid] = { language: 'EN' };
     } else {
-      language[userid] = user.language;
+      users[userid] = user;
     }
   });
 
@@ -29,13 +29,13 @@ io.on('connection', (socket) => {
       const code = api.getLanguageCode(lang);
       if (code !== undefined) {
         await db.updateLanguage(userid, code);
-        language[userid] = code;
+        users[userid].language = code;
         socket.emit('message', { message: `成功切换语言为：${lang}` });
       } else {
         socket.emit('message', { message: '暂不支持该语言哦' });
       }
     } else {
-      const result = await api.tranlate({ from: 'auto', to: language[userid], query: message });
+      const result = await api.tranlate({ from: 'auto', to: users[userid].language, query: message });
       socket.emit('message', { message: result });
     }
   });
