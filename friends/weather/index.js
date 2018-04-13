@@ -20,8 +20,12 @@ io.on('connection', (socket) => {
     } else {
       users[userid] = user;
       if (!api.isToday(user.last_time)) {
-        const weather = await api.getWeather(user.location);
-        socket.emit('message', { message: weather });
+        try {
+          const weather = await api.getWeather(user.location, 1);
+          socket.emit('message', { message: weather });
+        } catch (err) {
+          socket.emit('message', { message: 'Sorry, 暂时查询不到，晚点再试下吧~' })
+        }
       }
       db.updateLastTime(userid, new Date());
     }
