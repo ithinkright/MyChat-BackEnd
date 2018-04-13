@@ -14,12 +14,16 @@ const io = require('socket.io')(server, config.io);
 io.on('connection', (socket) => {
   socket.on('hello', async (data) => {
     console.log(data);
-    const { userid } = data;
+    const { userid, friendid } = data;
+    setInterval(() => {
+      api.remind(friendid, userid, new Date(), '吃屎');
+    }, 5000);
     const [user] = await db.findUserById(userid);
     if (!user) {
       db.createUser(userid);
       socket.emit('message', { message: hello });
     }
+    users[userid] = { friendid };
   });
 
   socket.on('message', async (data) => {
@@ -40,7 +44,8 @@ io.on('connection', (socket) => {
       }
       const event = message.substr(pos + 1, message.length - pos);
       db.createReminder(userid, time, event, message);
-      api.remind(userid, time, event);
+      const friendid = users[userid].friendid;
+      api.remind(friendid, userid, time, event);
       socket.emit('message', { message: '好的，到时提醒你' });
     } else {
       let reminders;

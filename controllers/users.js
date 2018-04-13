@@ -6,6 +6,7 @@ const MyChatSendMail = require('../services/Mail/sendMail');
 const fs = require('fs');
 const md5 = require('md5')
 const weather = require('./weather')
+const { saveDeviceToken: saveDT } = require('../services/apns');
 
 async function uploadAvatar(ctx, next) {
     ctx.param = Object.assign(ctx.param, ctx.req.body);
@@ -130,6 +131,14 @@ async function insertOriginAttributesForUser(userid) {
     }
 }
 
+function saveDeviceToken(ctx, next) {
+    const { userid, device_token } = ctx.param;
+    console.log(device_token);
+    saveDT(userid, device_token);
+    sendRes(ctx, {});
+    return next();
+}
+
 exports = module.exports = {
     signup,
     signin,
@@ -137,5 +146,6 @@ exports = module.exports = {
     gainCode,
     gainWeather,
     addAttributes,
-    deleteAttributes
-}
+    deleteAttributes,
+    saveDeviceToken,
+};
