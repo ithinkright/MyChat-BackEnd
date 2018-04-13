@@ -72,3 +72,4 @@ typings/
 time-nlp/__pycache__
 
 test.js
+package-lock.json
