@@ -31,16 +31,6 @@ function stringifyWeather(obj) {
   for (key in keyArray) {
     str += keyArray[key] + ": " + obj[key] + "\n";
   }
-  str += "空气质量：" + obj.environment.quality + "\n";
-  str += "出行建议：" + obj.environment.suggest + "\n";
-  str += "未来六天预报：\n";
-  let forecastweather = obj.forecast.weather;
-  for (key in forecastweather) {
-    let data = forecastweather[key];
-    str += data.date + "\t";
-    str += data.high + "\t" + data.low + "\t";
-    str += "白天：" + data.day.type + "\t" + "晚上：" + data.night.type + "\n";
-  }
   return str;
 }
 

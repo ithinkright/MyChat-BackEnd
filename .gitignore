@@ -1,3 +1,7 @@
+#packet.json
+package.json
+package-lock.json
+
 # Logs
 logs
 *.log
@@ -42,6 +46,7 @@ jspm_packages/
 # config/mysql.js
 # Typescript v1 declaration files
 typings/
+mysql.js
 
 # Optional npm cache directory
 .npm

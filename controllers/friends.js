@@ -105,10 +105,10 @@ async function insertFriends(friend, next) {
         friend.friendid = res.insertId;
     });
     let attributeSet = (friend.attribute ? friend.attribute.split(',') : []);
-    let first = (attributeSet.length === 0 ? "default" : attributeSet[0]);
-    let path = `public/friendAvatar/${first}.png`;
+    let first = (attributeSet.length === 0 ? "defaultFriend" : attributeSet[0]);
+    let path = `public/images/${first}.png`;
     if (!fs.existsSync(path)) {
-        path = "public/friendAvatar/default.png";
+        path = "public/images/defaultFriend.png";
     }
     let avatarPath = `public/friendAvatar/${friend.friendid}.jpg`;
     try {
