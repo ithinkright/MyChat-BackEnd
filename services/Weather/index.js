@@ -25,8 +25,8 @@ async function getWeather(place) {
 }
 
 async function mytest() {
-  let result = await getWeather("广州");
-  console.log(result);
+    let result = await getWeather("广州");
+    console.log(result);
 }
 
 //mytest();
