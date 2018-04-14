@@ -30,6 +30,10 @@ io.on('connection', (socket) => {
     try {
       result = await lexicalAnalyse(message);
       times = await timeNlp(message);
+      if (times.length === 0) {
+        socket.emit('message', { message: 'Sorry，我 get 不到你要我提醒你什么' });
+        return;
+      }
     } catch (err) {
       socket.emit('message', { message: help });
       return;
