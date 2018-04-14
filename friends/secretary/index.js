@@ -6,8 +6,8 @@ const config = require('../config');
 const { lexicalAnalyse, timeNlp } = require('../nlp');
 
 const users = {};
-const hello = 'Hello，恭喜你 get 小秘书一枚～对我说\"提醒我 XX 去 XX\"可以帮你设置提醒事项。另外，\"查看 XX 的日程\"可以查询日程';
-const help = '\"提醒我 XX 去开会\"可以帮你设置提醒事项。另外，\"查看 XX 的日程\"可以查询日程';
+const hello = 'Hello，恭喜你 get 小秘书一枚～对我说\"提醒我 XX 去 XX\"可以帮你设置提醒事项。另外，\"查询 XX 的日程\"可以查询日程';
+const help = '啊，小秘太傻了，get 不到你的意思。不过你可以这样跟我聊天：\"提醒我 XX 去开会\"可以设置提醒事项；另外，\"查询 XX 的日程\"可以查询日程';
 
 const io = require('socket.io')(server, config.io);
 
@@ -26,25 +26,38 @@ io.on('connection', (socket) => {
   socket.on('message', async (data) => {
     console.log(data);
     const { userid, message } = data;
-    const result = await lexicalAnalyse(message);
-    const times = await timeNlp(message);
-    if (message.indexOf('提醒') !== -1) {
+    let result, times;
+    try {
+      result = await lexicalAnalyse(message);
+      times = await timeNlp(message);
+      if (times.length === 0) {
+        socket.emit('message', { message: 'Sorry，我 get 不到你要我提醒你什么' });
+        return;
+      }
+    } catch (err) {
+      socket.emit('message', { message: help });
+      return;
+    }
+    if (message.indexOf('提醒') !== -1 || message.indexOf('叫我') !== -1) {
       const time = times[0];
       if (time <= new Date()) {
         socket.emit('message', { message: 'Sorry，提醒时间不能在过去哦' });
         return;
       }
-      const pos = message.indexOf('去');
-      if (pos === -1 || pos === message.length - 1) {
+      let { event } = result;
+      if (!event) {
         socket.emit('message', { message: 'Sorry，我 get 不到你要我提醒你什么' });
         return;
       }
-      const event = message.substr(pos + 1, message.length - pos);
+      const pos = message.indexOf(event);
+      if (pos + event.length !== message.length) {
+        event = message.substr(pos, message.length - pos);
+      }
       db.createReminder(userid, time, event, message);
       const friendid = users[userid].friendid;
-      api.remind(friendid, userid, time, event);
+      api.remind(friendid, userid, time, `是时候去${event}啦`);
       socket.emit('message', { message: '好的，到时提醒你' });
-    } else {
+    } else if (message.indexOf('查询') !== -1) {
       let reminders;
       if (times.length === 1) {
         reminders = await db.findReminderByTime(userid, times[0]);
@@ -60,6 +73,12 @@ io.on('connection', (socket) => {
         }
         socket.emit('messages', { messages });
       }
+    } else if (message.indexOf('计时') !== -1) {
+      const friendid = users[userid].friendid;
+      api.remind(friendid, userid, times[0], `倒计时${result.date}到啦`);
+      socket.emit('message', { message: '好的，到时提醒你' });
+    } else {
+      socket.emit('message', { message: help });
     }
   });
 });

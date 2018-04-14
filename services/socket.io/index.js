@@ -24,6 +24,10 @@ function setSocket(server) {
       const { userid } = data;
       sockets.set(userid, socket);
     });
+
+    socket.on('message', (data) => {
+      console.log(data);
+    });
   });
     // io.of('/schedule').on('connection', function (socket) {
     //     socket.on('start', function (data) {

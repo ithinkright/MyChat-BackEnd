@@ -1,56 +1,51 @@
 const axios = require('axios');
 const md5 = require('md5');
+const {getWeather : myGetWeather} = require('../../services/Weather/index.js')
 var to_json = require('xmljson').to_json;
 
-async function getWeather(place) {
-  console.log(place);
-  let result = await axios({
-    url: 'https://www.sojson.com/open/api/weather/xml.shtml',
-    headers: {
-      'Content-type': 'application/x-www-form-urlencoded'
-    },
-    params: {
-      'city': place
-    }
-  })
-  let toJson = new Promise(function (resolve, reject) {
-    to_json(result.data, function (err, data) {
-      if (err) {
-        reject(err);
-      } else {
-        console.log(data);
-        resolve(stringifyWeather(data));
-      }
-    });
-  })
-  let res = await toJson;
-  return res.resp;
+// 1JINTIAN  0 WEILAI
+async function getWeather(place, flag) {
+  try {
+    let result = await myGetWeather(place);
+    console.log(result)
+    return stringifyWeather(result, flag)
+  } catch(e) {
+    throw(e)
+  }
 }
 
-function stringifyWeather(obj) {
-    try {
+function stringifyWeather(obj, flag) {
+        console.log(obj);
         if (obj.status) {
           return "城市有误，请重新输入";
         }
-        let str = "";
-        let keyArray = {
-          city: "城市",
-          wendu: "温度",
-          fengli: "风力",
-          shidu: "湿度",
-          fengxiang: "风向",
-          sunrise_1: "日升时间",
-          sunset_1: "日落时间"
+        if(!obj.wendu) {
+          throw(new Error(''))
         }
-        for (key in keyArray) {
-          str += keyArray[key] + ": " + obj[key] + "\n";
+        // obj = obj.resp;
+        let str;
+        if(flag) {
+          str = `今天${obj.city}温度大概为${obj.wendu}℃，湿度为${obj.shidu}`
+          if (obj.environment) {
+            str += `，pm2.5为${obj.environment.pm25}，空气质量${obj.environment.quality}，MyChat给你的小建议是:${obj.environment.suggest}`;
+          }
+          str += `\n此外，偷偷告诉你哦，`;
+          let num = Math.floor(Math.random() * 10)
+          str += obj.zhishus.zhishu[num].detail;
+        } else {
+          str = `未来五天天气预报如下:\n`;
+          console.log(obj);
+          for(let i in obj.forecast.weather) {
+            let item = obj.forecast.weather[i];
+            if(i == '4') {
+              str += `${item.date}，${item.low.substr(3)}-${item.high.substr(3)}，白天${item.day.type}，晚上${item.night.type}`;
+            } else {
+              str += `${item.date}，${item.low.substr(3)}-${item.high.substr(3)}，白天${item.day.type}，晚上${item.night.type}\n`;
+            }
+          }
         }
+        console.log(str)
         return str;
-    }
-    catch(e) {
-      console.log(e);
-      return "输入有误";
-    }
 }
 
 function isToday(date) {

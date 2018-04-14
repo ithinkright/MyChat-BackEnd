@@ -1,11 +1,11 @@
 const { sendMessages } = require('../../services/socket.io');
 
-function remind(friendid, userid, time, event) {
+function remind(friendid, userid, time, message) {
   const ms = time.getTime() - new Date().getTime();
   console.log(ms);
   setTimeout(() => {
-    const messages = [`是时候去${event}啦`];
-    console.log(friendid, userid, time, event);
+    const messages = [message];
+    console.log(friendid, userid, time, message);
     sendMessages(friendid, userid, messages);
   }, ms);
 }

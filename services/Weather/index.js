@@ -30,4 +30,6 @@ async function mytest() {
 }
 
 //mytest();
-exports = module.exports = getWeather;
+exports = module.exports = {
+    getWeather
+};
