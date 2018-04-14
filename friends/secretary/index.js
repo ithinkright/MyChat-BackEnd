@@ -40,12 +40,15 @@ io.on('connection', (socket) => {
         socket.emit('message', { message: 'Sorry，提醒时间不能在过去哦' });
         return;
       }
-      const pos = message.indexOf('去');
-      if (pos === -1 || pos === message.length - 1) {
+      let { event } = result;
+      if (!event) {
         socket.emit('message', { message: 'Sorry，我 get 不到你要我提醒你什么' });
         return;
       }
-      const event = message.substr(pos + 1, message.length - pos);
+      const pos = message.indexOf(event);
+      if (pos + event.length !== message.length) {
+        event = message.substr(pos, message.length - pos);
+      }
       db.createReminder(userid, time, event, message);
       const friendid = users[userid].friendid;
       api.remind(friendid, userid, time, event);
