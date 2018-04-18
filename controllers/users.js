@@ -13,8 +13,6 @@ async function uploadAvatar(ctx, next) {
     let res = pick(ctx.param, ['userid']);
     let avatarPath = `public/avatar/${res.userid}.jpg`;
     let oldPath = ctx.req.file.path;
-    console.log(fs.existsSync(oldPath))
-    console.log(ctx.req.file);
     try {
         fs.renameSync(oldPath, avatarPath);
         sendRes(ctx)
@@ -28,7 +26,7 @@ async function gainWeather(ctx, next) {
     let res = pick(ctx.param, ['place']);
     try {
         let result = await weather.get(res.place);
-        sendRes(ctx, {result: result});
+        sendRes(ctx, { result: result });
     } catch (e) {
         throw new MyChatError(2, "天气获取失败，请勿频繁获取");
     }
@@ -94,17 +92,17 @@ async function addAttributes(ctx, next) {
     obj.userid = ctx.params.userid;
     let [attribute] = await attributesModel.findAttributeById(obj);
     if (!attribute) {
-        sendRes(ctx, {result: "Fail"});
+        sendRes(ctx, { result: "Fail" });
         throw new MyChatError("属性不存在");
     }
     let [user_attribute] = await users_attributesModel.findUsersAttributeByObj(obj);
     if (user_attribute) {
-        sendRes(ctx, {result: "Fail"});
+        sendRes(ctx, { result: "Fail" });
         throw new MyChatError("这个好友已经拥有此属性");
     }
     await users_attributesModel.insertUsersAttribute(obj);
     let result = await users_attributesModel.findUsersAttributeById(obj);
-    sendRes(ctx, {result: result});
+    sendRes(ctx, { result: result });
     return next();
 }
 
@@ -114,20 +112,20 @@ async function deleteAttributes(ctx, next) {
     obj.userid = ctx.params.userid;
     let [user_attribute] = await users_attributesModel.findUsersAttributeByObj(obj);
     if (!user_attribute) {
-        sendRes(ctx, {result: "Fail"});
+        sendRes(ctx, { result: "Fail" });
         throw new MyChatError("这个好友不拥有此属性");
     }
     await users_attributesModel.deleteUsersAttributeByAttributeId(obj);
     let result = await users_attributesModel.findUsersAttributeById(obj);
-    sendRes(ctx, {result: result});
+    sendRes(ctx, { result: result });
     return next();
 }
 
 async function insertOriginAttributesForUser(userid) {
     let data = attributesData.data;
     for (e in data) {
-        let [attribute] = await attributesModel.findAttributeByObj({name : data[e].name});
-        users_attributesModel.insertUsersAttribute({userid: userid, attributeid: attribute.attributeid});
+        let [attribute] = await attributesModel.findAttributeByObj({ name: data[e].name });
+        users_attributesModel.insertUsersAttribute({ userid: userid, attributeid: attribute.attributeid });
     }
 }
 

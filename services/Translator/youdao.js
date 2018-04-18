@@ -43,7 +43,6 @@ async function tranlate(obj) {
 
 async function mytest() {
     let result = await tranlate(test);
-    console.log(result)
 }
 // mytest()
 exports = module.exports = tranlate;
