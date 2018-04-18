@@ -20,8 +20,7 @@ async function getWeather(place) {
             }
         });
     })
-    let res = await toJson;
-    return res.resp;
+    return toJson;
 }
 
 async function mytest() {
@@ -30,4 +29,6 @@ async function mytest() {
 }
 
 //mytest();
-exports = module.exports = getWeather;
+exports = module.exports = {
+  getWeather
+}
