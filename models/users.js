@@ -69,10 +69,24 @@ async function findUserByObj(obj) {
     return queryDB(sql, values);
 }
 
+function saveDeviceToken(userid, token, time) {
+    const sql = `INSERT INTO device_token (userid, token, time) VALUES (?, ?, ?);`;
+    const values = [userid, token, time];
+    return queryDB(sql, values);
+}
+
+function updateDeviceToken(userid, token, time) {
+    const sql = `UPDATE device_token SET token = ?, time = ? WHERE userid = ?;`;
+    const values = [token, time, userid];
+    return queryDB(sql, values);
+}
+
 exports = module.exports = {
     createUserTable,
     insertUser,
     showTable,
     findUserById,
-    findUserByObj
-}
+    findUserByObj,
+    saveDeviceToken,
+    updateDeviceToken,
+};

@@ -6,8 +6,8 @@ const config = require('../config');
 const { lexicalAnalyse, timeNlp } = require('../nlp');
 
 const users = {};
-const hello = 'Hello，恭喜你 get 小秘书一枚～对我说\"提醒我 XX 去 XX\"可以帮你设置提醒事项。另外，\"查询 XX 的日程\"可以查询日程';
-const help = '啊，小秘太傻了，get 不到你的意思。不过你可以这样跟我聊天：\"提醒我 XX 去开会\"可以设置提醒事项；另外，\"查询 XX 的日程\"可以查询日程';
+const hello = 'Hello，恭喜你 get 小秘书一枚～\n\n对我说\"提醒我 XX 去 XX\"可以帮你设置提醒事项。另外，\"查询 XX 的日程\"可以查询日程';
+const help = '啊，小秘太傻了，get 不到你的意思。\n\n不过你可以这样跟我说：\"提醒我 XX 去开会\"可以设置提醒事项；另外，\"查询 XX 的日程\"可以查询日程';
 
 const io = require('socket.io')(server, config.io);
 

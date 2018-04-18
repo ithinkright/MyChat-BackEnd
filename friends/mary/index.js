@@ -4,7 +4,7 @@ const db = require('./db');
 const config = require('../config');
 const { lexicalAnalyse, timeNlp } = require('../nlp');
 
-const hello = 'Hello，我是 Mary，你可以通过跟我聊天记日记。比如说你告诉我\"三天前我去了XX玩XX\"，就可以问我\"我三天前去了哪里\", \"我三天前在干嘛\"，我就可以帮你回忆起来哦。'
+const hello = 'Hello，我是 Mary，你可以通过跟我聊天记日记。\n\n比如说你告诉我\"三天前我去了 XX 做了 XX\"，就可以问我\"我三天前去了哪里\", \"我三天前在干嘛\"，我就可以帮你回忆起来哦。'
 const help = '问我\"我昨天做了什么\"或者\"我前天去了哪里\"等问题，我也许能通过你的日记找到答案，试试吧～';
 
 const io = require('socket.io')(server, config.io);
@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
         socket.emit('message', { message: `Sorry，查不到${result.date}你做了什么` });
         return;
       }
-      const messages = [`这是你在${result.date}的日记：`];
+      const messages = [`这是你在${result.date}的日记👇`];
       for (const diary of diaries) {
         messages.push(diary.origin);
       }

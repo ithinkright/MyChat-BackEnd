@@ -1,4 +1,6 @@
 const axios = require('axios');
+const { formatTime } = require('./util');
+
 const access_token = '24.624c6bd23456a029884d1aebbd87a4d8.2592000.1524062832.282335-10929395';
 // https://cloud.baidu.com/doc/NLP/NLP-API.html#.E8.AF.8D.E6.B3.95.E5.88.86.E6.9E.90.E6.8E.A5.E5.8F.A3
 
@@ -11,7 +13,7 @@ function analyseItems(items_) {
     if (item['pos'] !== 'u') items.push(item);
   }
 
-  // 获取日记的各个元素
+  // 获取各个元素
   for (let i = 0; i < items.length; ++i) {
     const item = items[i];
     // date
@@ -40,15 +42,19 @@ function analyseItems(items_) {
         result.people.push(item['item']);
       }
     }
+    // amount
+    if (item['pos'] === 'm') {
+      result.amount = item['item'];
+    }
   }
-
   console.log(result);
   return result;
 }
 
 async function timeNlp(message) {
   const url = 'http://127.0.0.1:4000';
-  const res = await axios.post(url, { time: message });
+  const base = formatTime(new Date());
+  const res = await axios.post(url, { time: message, base });
   const { result } = res.data;
   const ret = [];
   if (result.error) throw new Error(result.error);

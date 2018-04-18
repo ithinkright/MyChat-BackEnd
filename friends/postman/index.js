@@ -23,7 +23,7 @@ io.on('connection', (socket) => {
         };
         socket.emit('messages', {
           messages: [
-            'Hello，这是咱们第一次见面。你先得添加一个邮箱账户（目前只支持 QQ 邮箱）才能使用此服务。',
+            'Hello，我是可以帮你发邮件的小邮差～\n\n这是咱们第一次见面，你先得添加一个邮箱账户（目前只支持 QQ 邮箱）哦。',
             '请问你的 QQ 邮箱账号是？',
           ],
         });

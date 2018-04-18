@@ -98,6 +98,15 @@ async function deleteFriend(obj) {
     return queryDB(sql, values);
 }
 
+async function findFriendByAttributename(userid, attributename) {
+    const sql = `
+    select *
+    from friends as f, users_friends as uf, attributes as a
+    where uf.userid = ? and a.name = ? and uf.friendid = f.friendid and f.attribute = a.attributeid;`;
+    const values = [userid, attributename];
+    return queryDB(sql, values);
+}
+
 exports = module.exports = {
     createFriendTable,
     insertFriend,
@@ -105,5 +114,6 @@ exports = module.exports = {
     findFriendByObj,
     modifyRole,
     modifyAttribute,
-    deleteFriend
-}
+    deleteFriend,
+    findFriendByAttributename,
+};

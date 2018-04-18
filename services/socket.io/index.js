@@ -3,6 +3,7 @@ const { pushNotificetion } = require('../apns');
 // const receiveMail = require('../Mail/receiveMail');
 
 const sockets = new Map();
+const online = new Map();  // 0不在线，1检测中，2在线
 const test_timeout = 3000;
 const unread_messages = new Map();
 let test = {
@@ -28,6 +29,23 @@ function setSocket(server) {
     socket.on('message', (data) => {
       console.log(data);
     });
+
+    socket.on('online', (data) => {
+      console.log(data);
+      const { userid } = data;
+      online.set(userid, true);
+    });
+
+    socket.on('offline', (data) => {
+      console.log(data);
+      const { userid } = data;
+      online.set(userid, false);
+    });
+
+    socket.on('test-online', (data) => {
+      const { userid } = data;
+      is_online.set(userid, true);
+    });
   });
     // io.of('/schedule').on('connection', function (socket) {
     //     socket.on('start', function (data) {
@@ -50,10 +68,6 @@ function testOnline(userid) {
   return new Promise((resolve, reject) => {
     if (!sockets.has(userid)) resolve(false);
     const socket = sockets.get(userid);
-    socket.on('test-online', (data) => {
-      socket.removeAllListeners('test-online');
-      resolve(true);
-    });
     socket.emit('test-online', {});
     setTimeout(() => {
       socket.removeAllListeners('test-online');

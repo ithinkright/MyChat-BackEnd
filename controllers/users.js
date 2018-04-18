@@ -131,9 +131,9 @@ async function insertOriginAttributesForUser(userid) {
     }
 }
 
-function saveDeviceToken(ctx, next) {
+async function saveDeviceToken(ctx, next) {
     const { userid, device_token } = ctx.param;
-    saveDT(userid, device_token);
+    await saveDT(userid, device_token);
     sendRes(ctx, {});
     return next();
 }

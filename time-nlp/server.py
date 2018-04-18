@@ -6,6 +6,8 @@ from flask import Flask, jsonify, request
 app = Flask(__name__)
 tn = TimeNormalizer()
 
+print(tn.parse(target='上星期', timeBase='2018-04-18 00:00:00'))
+
 @app.route('/')
 def hello():
   return 'Hello World!'
@@ -15,7 +17,8 @@ def time_nlp():
   data = request.get_data()
   param = json.loads(data.decode('utf-8'))
   time = param['time']
-  parse_res = json.loads(tn.parse(target=time))
+  base = param['base']
+  parse_res = json.loads(tn.parse(target=time, timeBase=base))
   res = {}
   res['time'] = time
   res['result'] = parse_res

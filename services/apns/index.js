@@ -1,6 +1,7 @@
 const apn = require("apn");
 const path = require('path');
 const { findFriendByObj } = require('../../models/friends');
+const { saveDeviceToken, updateDeviceToken } = require('../../models/users');
 
 // const device_token = '527325efaa9bded0a682e2e001ade4213f682449fca25f117be11887c30b70d4';
 const tokens = new Map();
@@ -34,8 +35,11 @@ function increaseBadge(userid, delta) {
   badges.set(userid, now);
 }
 
-function saveDeviceToken(userid, token) {
+async function saveDeviceToken(userid, token) {
   tokens.set(userid, token);
+  const has_old = await findDeviceToken(userid);
+  if (has_old) await updateDeviceToken(userid, token);
+  else await saveDeviceToken(userid, token);
 }
 
 async function pushNotificetion(userid, friendid, messages) {

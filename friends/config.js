@@ -77,4 +77,30 @@ exports = module.exports = {
       connectionLimit: 10,
     },
   },
+
+  accountant: {
+    port: 3008,
+    mysql: {
+      host: '139.199.174.146',
+      user: 'MyChatOwner',
+      password: 'WoJueDeDui',
+      database: 'MyChat-accountant',
+      connectionLimit: 10,
+    },
+  },
+
+  express: {
+    port: 3009,
+  },
+
+  mychat: {
+    port: 3010,
+    mysql: {
+      host: '139.199.174.146',
+      user: 'MyChatOwner',
+      password: 'WoJueDeDui',
+      database: 'MyChat-mychat',
+      connectionLimit: 10,
+    },
+  },
 };
