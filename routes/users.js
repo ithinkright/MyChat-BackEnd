@@ -24,4 +24,9 @@ router.post('/auth', usersCtrl.gainCode)
 router.post('/:userid/attributes', usersCtrl.addAttributes)
 
 router.delete('/:userid/attributes', usersCtrl.deleteAttributes)
+
+router.post('/device_token', usersCtrl.saveDeviceToken);
+
+router.delete('/badge', usersCtrl.deleteBadge);
+
 exports = module.exports = router

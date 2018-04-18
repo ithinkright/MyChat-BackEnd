@@ -1,7 +1,10 @@
 const io = require('socket.io')();
-const receiveMail = require('../Mail/receiveMail');
+const { pushNotificetion } = require('../apns');
+// const receiveMail = require('../Mail/receiveMail');
 
-let sockets = new Map();
+const sockets = new Map();
+const test_timeout = 3000;
+const unread_messages = new Map();
 let test = {
     user: '934657014@qq.com',
     password: 'umffjousigrgbbhb',
@@ -11,10 +14,19 @@ let test = {
 function setSocket(server) {
   io.attach(server);
   io.on('connection', function (socket) {
+    // console.log('new conn');
+    // setInterval(() => {
+    //   socket.emit('message', { friendid: 'test', message: 'test' });
+    // }, 5000);
+
     socket.on('hello', function (data) {
       console.log(data);
       const { userid } = data;
       sockets.set(userid, socket);
+    });
+
+    socket.on('message', (data) => {
+      console.log(data);
     });
   });
     // io.of('/schedule').on('connection', function (socket) {
@@ -34,17 +46,38 @@ function setSocket(server) {
     // })
 }
 
-function sendMessages(friendid, userid, messages) {
-  if (!messages || messages.length === 0) return;
-  if (!sockets.has(userid)) return;
-  const socket = sockets.get(userid);
-  socket.emit('messages', {
-    friendid,
-    messages,
+function testOnline(userid) {
+  return new Promise((resolve, reject) => {
+    if (!sockets.has(userid)) resolve(false);
+    const socket = sockets.get(userid);
+    socket.on('test-online', (data) => {
+      socket.removeAllListeners('test-online');
+      resolve(true);
+    });
+    socket.emit('test-online', {});
+    setTimeout(() => {
+      socket.removeAllListeners('test-online');
+      resolve(false);
+    }, test_timeout);
   });
+}
+
+async function sendMessages(friendid, userid, messages) {
+  if (!messages || messages.length === 0) return;
+  const is_online = await testOnline(userid);
+  if (is_online) {
+    const socket = sockets.get(userid);
+    socket.emit('messages', {
+      friendid,
+      messages,
+    });
+  } else {
+    pushNotificetion(userid, friendid, messages);
+  }
 }
 
 exports = module.exports = {
   setSocket,
   sendMessages,
+  testOnline,
 };

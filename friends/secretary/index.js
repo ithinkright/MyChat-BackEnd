@@ -6,27 +6,34 @@ const config = require('../config');
 const { lexicalAnalyse, timeNlp } = require('../nlp');
 
 const users = {};
-const hello = 'Hello，恭喜你 get 小秘书一枚～对我说\"提醒我 XX 去 XX\"可以帮你设置提醒事项。另外，\"查看 XX 的日程\"可以查询日程';
-const help = '\"提醒我 XX 去开会\"可以帮你设置提醒事项。另外，\"查看 XX 的日程\"可以查询日程';
+const hello = 'Hello，恭喜你 get 小秘书一枚～对我说\"提醒我 XX 去 XX\"可以帮你设置提醒事项。另外，\"查询 XX 的日程\"可以查询日程';
+const help = '啊，小秘太傻了，get 不到你的意思。不过你可以这样跟我聊天：\"提醒我 XX 去开会\"可以设置提醒事项；另外，\"查询 XX 的日程\"可以查询日程';
 
 const io = require('socket.io')(server, config.io);
 
 io.on('connection', (socket) => {
   socket.on('hello', async (data) => {
     console.log(data);
-    const { userid } = data;
+    const { userid, friendid } = data;
     const [user] = await db.findUserById(userid);
     if (!user) {
       db.createUser(userid);
       socket.emit('message', { message: hello });
     }
+    users[userid] = { friendid };
   });
 
   socket.on('message', async (data) => {
     console.log(data);
     const { userid, message } = data;
-    const result = await lexicalAnalyse(message);
-    const times = await timeNlp(message);
+    let result, times;
+    try {
+      result = await lexicalAnalyse(message);
+      times = await timeNlp(message);
+    } catch (err) {
+      socket.emit('message', { message: help });
+      return;
+    }
     if (message.indexOf('提醒') !== -1) {
       const time = times[0];
       if (time <= new Date()) {
@@ -40,9 +47,10 @@ io.on('connection', (socket) => {
       }
       const event = message.substr(pos + 1, message.length - pos);
       db.createReminder(userid, time, event, message);
-      api.remind(userid, time, event);
+      const friendid = users[userid].friendid;
+      api.remind(friendid, userid, time, event);
       socket.emit('message', { message: '好的，到时提醒你' });
-    } else {
+    } else if (message.indexOf('查询') !== -1) {
       let reminders;
       if (times.length === 1) {
         reminders = await db.findReminderByTime(userid, times[0]);
@@ -58,6 +66,8 @@ io.on('connection', (socket) => {
         }
         socket.emit('messages', { messages });
       }
+    } else {
+      socket.emit('message', { message: help });
     }
   });
 });
