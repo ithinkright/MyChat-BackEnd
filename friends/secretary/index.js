@@ -30,25 +30,32 @@ io.on('connection', (socket) => {
     try {
       result = await lexicalAnalyse(message);
       times = await timeNlp(message);
+      if (times.length === 0) {
+        socket.emit('message', { message: 'Sorry，我 get 不到你要我提醒你什么' });
+        return;
+      }
     } catch (err) {
       socket.emit('message', { message: help });
       return;
     }
-    if (message.indexOf('提醒') !== -1) {
+    if (message.indexOf('提醒') !== -1 || message.indexOf('叫我') !== -1) {
       const time = times[0];
       if (time <= new Date()) {
         socket.emit('message', { message: 'Sorry，提醒时间不能在过去哦' });
         return;
       }
-      const pos = message.indexOf('去');
-      if (pos === -1 || pos === message.length - 1) {
+      let { event } = result;
+      if (!event) {
         socket.emit('message', { message: 'Sorry，我 get 不到你要我提醒你什么' });
         return;
       }
-      const event = message.substr(pos + 1, message.length - pos);
+      const pos = message.indexOf(event);
+      if (pos + event.length !== message.length) {
+        event = message.substr(pos, message.length - pos);
+      }
       db.createReminder(userid, time, event, message);
       const friendid = users[userid].friendid;
-      api.remind(friendid, userid, time, event);
+      api.remind(friendid, userid, time, `是时候去${event}啦`);
       socket.emit('message', { message: '好的，到时提醒你' });
     } else if (message.indexOf('查询') !== -1) {
       let reminders;
@@ -66,6 +73,10 @@ io.on('connection', (socket) => {
         }
         socket.emit('messages', { messages });
       }
+    } else if (message.indexOf('计时') !== -1) {
+      const friendid = users[userid].friendid;
+      api.remind(friendid, userid, times[0], `倒计时${result.date}到啦`);
+      socket.emit('message', { message: '好的，到时提醒你' });
     } else {
       socket.emit('message', { message: help });
     }

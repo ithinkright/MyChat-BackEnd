@@ -48,6 +48,11 @@ function analyseItems(items_) {
 
 async function timeNlp(message) {
   const url = 'http://127.0.0.1:4000';
+  let half = false;
+  if (message.indexOf('半') !== -1) {
+    half = true;
+    message = message.replace('半', '一');
+  }
   const res = await axios.post(url, { time: message });
   const { result } = res.data;
   const ret = [];
@@ -57,15 +62,22 @@ async function timeNlp(message) {
   } else if (result.type === 'timedelta') {
     const { year, month, day, hour, minute, second } = result.timedelta;
     const now = new Date();
-    const delta = message.indexOf('前') !== -1 ? -1 : 1;
-    ret.push(new Date(
-      now.getFullYear() + delta * year,
-      now.getMonth() + delta * month,
-      now.getDate() + delta * day,
-      now.getHours() + delta * hour,
-      now.getMinutes() + delta * minute,
-      now.getSeconds() + delta * second,
-    ));
+    const ago = message.indexOf('前') !== -1 ? -1 : 1;
+    const one_time = new Date(
+      now.getFullYear() + ago * year,
+      now.getMonth() + ago * month,
+      now.getDate() + ago * day,
+      now.getHours() + ago * hour,
+      now.getMinutes() + ago * minute,
+      now.getSeconds() + ago * second,
+    );
+    if (half) {
+      const delta = one_time.getTime() - now.getTime();
+      const half_time = new Date(now.getTime() + Math.floor(delta/2));
+      ret.push(half_time);
+    } else {
+      ret.push(one_time);
+    }
   } else if (result.type === 'timespan') {
     const day1 = new Date(result.timespan[0]);
     const day2 = new Date(result.timespan[1]);

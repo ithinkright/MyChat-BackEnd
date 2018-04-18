@@ -43,10 +43,10 @@ async function pushNotificetion(userid, friendid, messages) {
   const [friend] = await findFriendByObj({ friendid });
   const note = new apn.Notification();
   increaseBadge(userid, messages.length);
-  note.badge = badges.get(userid);
+  // note.badge = badges.get(userid);
+  note.badge = 1;
   note.alert = {
-    title: '新消息',
-    subtitle: friend.friendname,
+    title: friend.friendname,
     body: messages[messages.length-1],
   };
   note.sound = "ping.aiff";
