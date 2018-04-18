@@ -47,6 +47,24 @@ data = [
       gender: "female",
       birth: (new Date()).toLocaleDateString(),
       roleid: "e1cbdf31fe7ba25d56d567ba210372b3"
+  },
+  {
+      friendname: "我的客服",
+      gender: "female",
+      birth: (new Date()).toLocaleDateString(),
+      roleid: "7cae0e79bdcf71dfd512f1100219fdbc"
+  },
+  {
+      friendname: "有财",
+      gender: "female",
+      birth: (new Date()).toLocaleDateString(),
+      roleid: "7516132c51e75ce65534cbdcc96c2c45"
+  },
+  {
+      friendname: "快递小哥",
+      gender: "female",
+      birth: (new Date()).toLocaleDateString(),
+      roleid: "d07d5981f9dade6a8a7b1fc6cf1e2611"
   }
 ]
 
