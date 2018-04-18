@@ -14,9 +14,6 @@ async function queryDB(sql, value) {
     try {
         return pool.queryAsync(sql, value);
     } catch (err) {
-        // console.log(err);
-        // console.log(sql, value);
-        console.log('nihaocuowu')
         throw new MyChatError(1, '数据库查询错误', err.stack)
     }
 }
