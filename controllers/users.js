@@ -37,6 +37,7 @@ async function gainWeather(ctx, next) {
 
 async function signup(ctx, next) {
     let user = pick(ctx.param, ['username', 'password']);
+    user.username = user.username.toLowerCase();
     user.userid = md5(user.username);
     let [result] = await usersModel.findUserById({ userid: user.userid });
     if (result) {
@@ -57,6 +58,7 @@ async function signup(ctx, next) {
 
 async function signin(ctx, next) {
     let user = pick(ctx.param, ['username', 'password']);
+    user.username = user.username.toLowerCase()
     let [result] = await usersModel.findUserByObj({ username: user.username })
     if (!result) {
         throw new MyChatError(2, '用户名不存在');

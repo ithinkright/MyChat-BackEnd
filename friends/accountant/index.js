@@ -5,7 +5,7 @@ const config = require('../config');
 const { lexicalAnalyse, timeNlp } = require('../nlp');
 const { formatTime } = require('../util');
 
-const hello = 'Hello，我是小会计，你可以通过跟我聊天记账。\n\n比如说你告诉我\"今天中午吃饭花了3元\"，然后就可以问我\"今天/上星期我花了多少钱\"。'
+const hello = 'Hello，我是小会计，你可以通过跟我聊天记账。\n\n比如说你告诉我\"今天中午吃饭花了15\"，然后就可以问我\"今天/上星期我花了多少钱\"。'
 const help = '比如说你告诉我\"今天中午吃饭花了3元\"，然后就可以问我\"今天/上星期我花了多少钱\"。';
 
 const io = require('socket.io')(server, config.io);
@@ -53,8 +53,8 @@ io.on('connection', (socket) => {
       socket.emit('messages', { messages });
     } else {
       // 记账
-      const { date, event, amount } = result;
-      db.createAccount(userid, date, event, amount);
+      const { event, amount } = result;
+      db.createAccount(userid, dates[0], event, amount);
       socket.emit('message', { message: '👌帮你记下了' });
     }
   });

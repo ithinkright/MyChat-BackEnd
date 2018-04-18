@@ -103,4 +103,8 @@ exports = module.exports = {
       connectionLimit: 10,
     },
   },
+
+  gakki: {
+    port: 3011,
+  },
 };

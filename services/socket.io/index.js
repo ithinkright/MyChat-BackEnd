@@ -1,29 +1,19 @@
 const io = require('socket.io')();
 const { pushNotificetion } = require('../apns');
-// const receiveMail = require('../Mail/receiveMail');
 
 const sockets = new Map();
 const online = new Map();  // 0不在线，1检测中，2在线
 const test_timeout = 3000;
 const unread_messages = new Map();
-let test = {
-    user: '934657014@qq.com',
-    password: 'umffjousigrgbbhb',
-    host: 'imap.qq.com'
-}
 
 function setSocket(server) {
   io.attach(server);
   io.on('connection', function (socket) {
-    // console.log('new conn');
-    // setInterval(() => {
-    //   socket.emit('message', { friendid: 'test', message: 'test' });
-    // }, 5000);
-
     socket.on('hello', function (data) {
       console.log(data);
       const { userid } = data;
       sockets.set(userid, socket);
+      online.set(userid, true);
     });
 
     socket.on('message', (data) => {
@@ -31,55 +21,26 @@ function setSocket(server) {
     });
 
     socket.on('online', (data) => {
-      console.log(data);
+      console.log('online', data);
       const { userid } = data;
       online.set(userid, true);
     });
 
     socket.on('offline', (data) => {
-      console.log(data);
+      console.log('offline', data);
       const { userid } = data;
       online.set(userid, false);
     });
-
-    socket.on('test-online', (data) => {
-      const { userid } = data;
-      is_online.set(userid, true);
-    });
   });
-    // io.of('/schedule').on('connection', function (socket) {
-    //     socket.on('start', function (data) {
-    //         setTimeout(function () {
-    //             socket.emit('schedule', { thing: data.thing })
-    //         }, data.time * 1000);
-    //         socket.emit('scheduleSuccess', {
-    //             mes: '日程创建成功'
-    //         })
-    //     })
-    // })
-    // io.of('/mail').on('connection', function (socket) {
-    //     socket.on('start', function (data) {
-    //         receiveMail(data, socket)
-    //     })
-    // })
 }
 
-function testOnline(userid) {
-  return new Promise((resolve, reject) => {
-    if (!sockets.has(userid)) resolve(false);
-    const socket = sockets.get(userid);
-    socket.emit('test-online', {});
-    setTimeout(() => {
-      socket.removeAllListeners('test-online');
-      resolve(false);
-    }, test_timeout);
-  });
+function isOnline(userid) {
+  return online.has(userid) && online.get(userid);
 }
 
 async function sendMessages(friendid, userid, messages) {
   if (!messages || messages.length === 0) return;
-  const is_online = await testOnline(userid);
-  if (is_online) {
+  if (isOnline(userid)) {
     const socket = sockets.get(userid);
     socket.emit('messages', {
       friendid,
@@ -93,5 +54,4 @@ async function sendMessages(friendid, userid, messages) {
 exports = module.exports = {
   setSocket,
   sendMessages,
-  testOnline,
 };

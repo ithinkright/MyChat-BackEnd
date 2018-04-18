@@ -6,8 +6,6 @@ from flask import Flask, jsonify, request
 app = Flask(__name__)
 tn = TimeNormalizer()
 
-print(tn.parse(target='上星期', timeBase='2018-04-18 00:00:00'))
-
 @app.route('/')
 def hello():
   return 'Hello World!'

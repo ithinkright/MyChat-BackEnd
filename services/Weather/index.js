@@ -20,14 +20,15 @@ async function getWeather(place) {
             }
         });
     })
-    let res = await toJson;
-    return res.resp;
+    return toJson;
 }
 
 async function mytest() {
-  let result = await getWeather("广州");
-  console.log(result);
+    let result = await getWeather("广州");
+    console.log(result);
 }
 
 //mytest();
-exports = module.exports = getWeather;
+exports = module.exports = {
+    getWeather
+}

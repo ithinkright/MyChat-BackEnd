@@ -23,7 +23,8 @@ io.on('connection', (socket) => {
   socket.on('message', async (data) => {
     console.log(data);
     const { userid, message } = data;
-    const result = await lexicalAnalyse(message);
+    const items = await lexicalAnalyse(message);
+    const result = api.analyseItems(items);
     let dates;
     try { dates = await timeNlp(message); }
     catch (err) { dates = [new Date()]; }

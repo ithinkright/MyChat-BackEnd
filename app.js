@@ -4,7 +4,7 @@ const { loadMiddlewares } = require('./middlewares');
 const { loadRouters } = require('./routes');
 const { runPre } = require('./services/MyChatUtils');
 const socketio = require('./services/socket.io');
-const { usersModel,attributesModel,friendsModel,rolesModel,users_friendsModel,users_attributesModel } = require('./models');
+const { usersModel,attributesModel,friendsModel,rolesModel,users_friendsModel,users_attributesModel,device_tokenModel } = require('./models');
 const { MyChatError } = require('./services/MyChatUtils');
 const queryDB = require('./services/db');
 const compute = require('./services/Compute/index');
@@ -43,6 +43,7 @@ async function createDataBase() {
     await rolesModel.createRoleTable();
     await users_friendsModel.createUserFriendTable();
     await users_attributesModel.createUsersAttributeTable();
+    await device_tokenModel.createDeviceTokenTable();
 }
 
 async function testSql() {

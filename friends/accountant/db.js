@@ -1,6 +1,12 @@
 const options = require('../config').accountant.mysql;
 const queryDb = require('../mysql').getQueryDb(options);
 
+function findUserById(userid) {
+  const sql = `SELECT * FROM user WHERE userid = ?;`;
+  const values = [userid];
+  return queryDb(sql, values);
+}
+
 function createUser(userid) {
   const sql = `INSERT INTO user (userid) VALUES (?);`;
   const values = [userid];
@@ -20,6 +26,7 @@ function findAccountsDuringDates(userid, before, after) {
 }
 
 exports = module.exports = {
+  findUserById,
   createUser,
   createAccount,
   findAccountsDuringDates,

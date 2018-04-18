@@ -1,59 +1,17 @@
 const axios = require('axios');
 const { formatTime } = require('./util');
 
-const access_token = '24.624c6bd23456a029884d1aebbd87a4d8.2592000.1524062832.282335-10929395';
+const access_token = '24.30c9bd66ecf0ad8bdc3b2515cb71e641.2592000.1526655825.282335-10929395';
 // https://cloud.baidu.com/doc/NLP/NLP-API.html#.E8.AF.8D.E6.B3.95.E5.88.86.E6.9E.90.E6.8E.A5.E5.8F.A3
-
-function analyseItems(items_) {
-  const result = {};
-  const items = [];
-
-  // 过滤掉助词
-  for (const item of items_) {
-    if (item['pos'] !== 'u') items.push(item);
-  }
-
-  // 获取各个元素
-  for (let i = 0; i < items.length; ++i) {
-    const item = items[i];
-    // date
-    if (item['ne'] === 'TIME' || item['pos'] === 't') {
-      result.date = item['item'];
-    }
-    // location
-    if (item['ne'] ===  'LOC' || item['pos'] === 's') {
-      result.location = item['item'];
-    }
-    // people
-    if (item['ne'] === 'PER' || item['ne'] === 'ORG' || item['pos'] === 'nr' || item['pos'] === 'nt' || item['pos' === 'r']) {
-      if (!result.people) result.people = [];
-      result.people.push(item['item']);
-    }
-    // event
-    if (item['pos'] === 'v') {
-      result.event = item['item'];
-    }
-    if (item['pos'] === 'n' && i > 0) {
-      // if (items[i-1]['item'] === '去' || items[i-1]['item'] === '在') {
-      //   result.location = item['item'];
-      // }
-      if (items[i-1]['item'] === '和' || items[i-1]['item'] === '跟' || items[i-1]['item'] === '与') {
-        if (!result.people) result.people = [];
-        result.people.push(item['item']);
-      }
-    }
-    // amount
-    if (item['pos'] === 'm') {
-      result.amount = item['item'];
-    }
-  }
-  console.log(result);
-  return result;
-}
 
 async function timeNlp(message) {
   const url = 'http://127.0.0.1:4000';
   const base = formatTime(new Date());
+  let half = false;
+  if (message.indexOf('半') !== -1) {
+    half = true;
+    message = message.replace('半', '一');
+  }
   const res = await axios.post(url, { time: message, base });
   const { result } = res.data;
   const ret = [];
@@ -63,15 +21,22 @@ async function timeNlp(message) {
   } else if (result.type === 'timedelta') {
     const { year, month, day, hour, minute, second } = result.timedelta;
     const now = new Date();
-    const delta = message.indexOf('前') !== -1 ? -1 : 1;
-    ret.push(new Date(
-      now.getFullYear() + delta * year,
-      now.getMonth() + delta * month,
-      now.getDate() + delta * day,
-      now.getHours() + delta * hour,
-      now.getMinutes() + delta * minute,
-      now.getSeconds() + delta * second,
-    ));
+    const ago = message.indexOf('前') !== -1 ? -1 : 1;
+    const one_time = new Date(
+      now.getFullYear() + ago * year,
+      now.getMonth() + ago * month,
+      now.getDate() + ago * day,
+      now.getHours() + ago * hour,
+      now.getMinutes() + ago * minute,
+      now.getSeconds() + ago * second,
+    );
+    if (half) {
+      const delta = one_time.getTime() - now.getTime();
+      const half_time = new Date(now.getTime() + Math.floor(delta/2));
+      ret.push(half_time);
+    } else {
+      ret.push(one_time);
+    }
   } else if (result.type === 'timespan') {
     const day1 = new Date(result.timespan[0]);
     const day2 = new Date(result.timespan[1]);
@@ -100,9 +65,7 @@ async function lexicalAnalyse(message) {
   const res = await axios.post(url, { text: message });
   const data = res.data;
   if (data.error_code) throw new Error(data.error_msg);
-  const result = analyseItems(data.items);
-  console.log(result);
-  return result;
+  return data.items;
 }
 
 exports = module.exports = {
