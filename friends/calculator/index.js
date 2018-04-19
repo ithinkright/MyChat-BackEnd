@@ -7,11 +7,11 @@ const help = '抱歉，我解析不了该表达式';
 
 io.on('connection', (socket) => {
   socket.on('hello', (data) => {
-    console.log(data);
+    console.log('calculator', 'hello', data);
   });
 
   socket.on('message', (data) => {
-    console.log(data);
+    console.log('calculator', 'message', data);
     const { message } = data;
     try {
       const result = api.compute(message);

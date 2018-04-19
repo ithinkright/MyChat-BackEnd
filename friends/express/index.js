@@ -8,7 +8,7 @@ const users = {};
 
 io.on('connection', (socket) => {
   socket.on('hello', (data) => {
-    console.log(data);
+    console.log('express', 'hello', data);
     // const { userid } = data;
     // const [user] = await db.findUserById(userid);
     // if (!user) {
@@ -25,7 +25,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('message', async (data) => {
-    console.log(data);
+    console.log('express', 'message', data);
     const { message } = data;
     if (api.isExpressNumber(message)) {
       // let [express] = await db.findByNumber(userid, message);

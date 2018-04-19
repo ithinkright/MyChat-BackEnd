@@ -11,7 +11,7 @@ const io = require('socket.io')(server, config.io);
 
 io.on('connection', (socket) => {
   socket.on('hello', async (data) => {
-    console.log(data);
+    console.log('mychat', 'hello', data);
     const { userid } = data;
     const [user] = await db.findUserById(userid);
     if (!user) {
@@ -23,7 +23,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('message', async (data) => {
-    console.log(data);
+    console.log('mychat', 'message', data);
     const { userid, message } = data;
     if (api.isMyChater(userid)) {
       const posa = message.indexOf('@');

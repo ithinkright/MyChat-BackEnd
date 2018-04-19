@@ -11,7 +11,7 @@ const io = require('socket.io')(server, config.io);
 
 io.on('connection', (socket) => {
   socket.on('hello', async (data) => {
-    console.log(data);
+    console.log('translator', 'hello', data);
     const { userid } = data;
     const [user] = await db.findUserById(userid);
     if (!user) {
@@ -24,7 +24,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('message', async (data) => {
-    console.log(data);
+    console.log('translator', 'message', data);
     const { userid, message } = data;
     if (message.startsWith('换成') && message.length < 8) {
       const lang = message.substr(2, message.length);

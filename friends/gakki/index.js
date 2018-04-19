@@ -5,11 +5,11 @@ const io = require('socket.io')(server, config.io);
 
 io.on('connection', (socket) => {
   socket.on('hello', (data) => {
-    console.log(data);
+    console.log('gakki', 'hello', data);
   });
 
   socket.on('message', (data) => {
-    console.log(data);
+    console.log('gakki', 'message', data);
     const { message } = data;
     socket.emit('message', { message: '好的，老公😝' });
   });

@@ -12,7 +12,7 @@ const io = require('socket.io')(server, config.io);
 
 io.on('connection', (socket) => {
   socket.on('hello', async (data) => {
-    console.log(data);
+    console.log('accountant', 'hello', data);
     const { userid } = data;
     const [user] = await db.findUserById(userid);
     if (!user) {
@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('message', async (data) => {
-    console.log(data);
+    console.log('accountant', 'message', data);
     const { userid, message } = data;
     const items = await lexicalAnalyse(message);
     const result = api.analyseItems(items);

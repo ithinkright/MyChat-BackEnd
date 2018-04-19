@@ -11,9 +11,8 @@ const io = require('socket.io')(server, config.io);
 
 io.on('connection', (socket) => {
   socket.on('hello', async (data) => {
-    console.log(data);
+    console.log('postman', 'hello', data);
     const { userid } = data;
-
     if (!users[userid]) {
       const [user] = await db.findUserById(userid);
       if (!user || !user.account) {
@@ -37,7 +36,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('message', async (data) => {
-    console.log(data);
+    console.log('postman', 'message', data);
     const { userid, message } = data;
     if (users[userid].status !== 'done') {
       const { status } = users[userid];

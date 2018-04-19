@@ -10,7 +10,7 @@ const io = require('socket.io')(server, config.io);
 
 io.on('connection', (socket) => {
   socket.on('hello', async (data) => {
-    console.log(data);
+    console.log('sanxing', 'hello', data);
     const { userid } = data;
     const [user] = await db.findUserById(userid);
     if (!user) {
@@ -42,7 +42,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('message', async (data) => {
-    console.log(data);
+    console.log('sanxing', 'message', data);
     const { userid, message } = data;
     console.log(users[userid]);
     if (users[userid].question_number < 3) {

@@ -39,9 +39,7 @@ function isOnline(userid) {
 }
 
 async function sendMessages(friendid, userid, messages) {
-  console.log('*******', online);
   if (!messages || messages.length === 0) return;
-  console.log('isOnline: ', userid, isOnline(userid));
   if (isOnline(userid)) {
     const socket = sockets.get(userid);
     socket.emit('messages', {

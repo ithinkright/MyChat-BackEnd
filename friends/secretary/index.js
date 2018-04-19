@@ -13,7 +13,7 @@ const io = require('socket.io')(server, config.io);
 
 io.on('connection', (socket) => {
   socket.on('hello', async (data) => {
-    console.log(data);
+    console.log('secretary', 'hello', data);
     const { userid, friendid } = data;
     const [user] = await db.findUserById(userid);
     if (!user) {
@@ -24,7 +24,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('message', async (data) => {
-    console.log(data);
+    console.log('secretary', 'message', data);
     const { userid, message } = data;
     let result, times;
     try {
