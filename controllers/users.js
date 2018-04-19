@@ -35,6 +35,7 @@ async function gainWeather(ctx, next) {
 
 async function signup(ctx, next) {
     let user = pick(ctx.param, ['username', 'password']);
+    user.username = user.username.toLowerCase();
     user.userid = md5(user.username);
     let [result] = await usersModel.findUserById({ userid: user.userid });
     if (result) {
@@ -55,6 +56,7 @@ async function signup(ctx, next) {
 
 async function signin(ctx, next) {
     let user = pick(ctx.param, ['username', 'password']);
+    user.username = user.username.toLowerCase()
     let [result] = await usersModel.findUserByObj({ username: user.username })
     if (!result) {
         throw new MyChatError(2, '用户名不存在');
@@ -123,15 +125,16 @@ async function deleteAttributes(ctx, next) {
 
 async function insertOriginAttributesForUser(userid) {
     let data = attributesData.data;
+    console.log(data);
     for (e in data) {
         let [attribute] = await attributesModel.findAttributeByObj({ name: data[e].name });
         users_attributesModel.insertUsersAttribute({ userid: userid, attributeid: attribute.attributeid });
     }
 }
 
-function saveDeviceToken(ctx, next) {
+async function saveDeviceToken(ctx, next) {
     const { userid, device_token } = ctx.param;
-    saveDT(userid, device_token);
+    await saveDT(userid, device_token);
     sendRes(ctx, {});
     return next();
 }

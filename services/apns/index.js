@@ -1,6 +1,7 @@
 const apn = require("apn");
 const path = require('path');
 const { findFriendByObj } = require('../../models/friends');
+const { saveDeviceToken: saveDeviceTokenToDB, updateDeviceToken, findDeviceToken } = require('../../models/device_token');
 
 // const device_token = '527325efaa9bded0a682e2e001ade4213f682449fca25f117be11887c30b70d4';
 const tokens = new Map();
@@ -34,12 +35,25 @@ function increaseBadge(userid, delta) {
   badges.set(userid, now);
 }
 
-function saveDeviceToken(userid, token) {
+async function saveDeviceToken(userid, token) {
+  const [device_token] = await findDeviceToken(userid);
+  if (device_token) await updateDeviceToken(userid, token);
+  else await saveDeviceTokenToDB(userid, token);
   tokens.set(userid, token);
 }
 
+async function getDeviceToken(userid) {
+  if (tokens.has(userid)) return tokens.get(userid);
+  else {
+    const [device_token] = await findDeviceToken(userid);
+    if (!device_token) throw new Error('用户的 device_token 不存在');
+    tokens.set(userid, device_token.token);
+    return device_token.token;
+  }
+}
+
 async function pushNotificetion(userid, friendid, messages) {
-  if (!tokens.has(userid)) return;
+  const device_token = await getDeviceToken(userid);
   const [friend] = await findFriendByObj({ friendid });
   const note = new apn.Notification();
   increaseBadge(userid, messages.length);
@@ -53,7 +67,7 @@ async function pushNotificetion(userid, friendid, messages) {
   note.payload = { friendid, messages };
   note.topic = "edu.sysu.mychat";
   console.log(note);
-  provider.send(note, tokens.get(userid)).then(result => {
+  provider.send(note, device_token).then(result => {
     console.log(result);
   });
 }

@@ -4,7 +4,7 @@ const db = require('./db');
 const config = require('../config');
 
 const users = {};
-const hello = `嗨我是小醒，灵感来自上一届创新赛的\"三醒\"。我每天会主动问你三个问题，请畅所欲言吧～`;
+const hello = `嗨我是小醒，灵感来自上一届创新赛的\"三醒\"。\n\n我每天会主动问你三个问题，然后我会尝试从你的回答里进行分析，希望能越来越了解你，请畅所欲言吧～`;
 
 const io = require('socket.io')(server, config.io);
 

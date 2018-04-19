@@ -32,6 +32,27 @@ async function showTable() {
     return flag;
 }
 
-exports = module.exports = {
-    createDeviceTokenTable
+function saveDeviceToken(userid, token, time) {
+    const sql = `INSERT INTO device_token (userid, token, time) VALUES (?, ?, ?);`;
+    const values = [userid, token, time];
+    return queryDB(sql, values);
 }
+
+function updateDeviceToken(userid, token, time) {
+    const sql = `UPDATE device_token SET token = ?, time = ? WHERE userid = ?;`;
+    const values = [token, time, userid];
+    return queryDB(sql, values);
+}
+
+function findDeviceToken(userid) {
+    const sql = `select * from device_token where userid = ?;`;
+    const values = [userid];
+    return queryDB(sql, values);
+}
+
+exports = module.exports = {
+    createDeviceTokenTable,
+    saveDeviceToken,
+    updateDeviceToken,
+    findDeviceToken,
+};
