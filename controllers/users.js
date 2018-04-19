@@ -1,11 +1,10 @@
 const md5 = require('md5');
+const fs = require('fs');
 const { usersModel, attributesModel, users_attributesModel } = require('../models')
 const { insertOriginFrendsForUser } = require('./friends')
 const { attributesData } = require('../data/index')
 const { MyChatError, pick, sendRes, utils } = require('../services/MyChatUtils/')
 const MyChatSendMail = require('../services/Mail/sendMail');
-const fs = require('fs');
-const md5 = require('md5')
 const weather = require('./weather')
 const { saveDeviceToken: saveDT, decreaseBadge } = require('../services/apns');
 
