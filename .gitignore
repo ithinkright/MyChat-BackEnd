@@ -67,3 +67,4 @@ public/avatar/*.jpg
 public/friendAvatar/*.jpg
 nohup.out
 time-nlp/TimeNormalizer.pyc
+logs/
