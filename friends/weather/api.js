@@ -80,8 +80,27 @@ function isToday(date) {
     now.getDate() === date.getDate();
 }
 
+function analyseItems(items_) {
+  const result = {};
+  const items = [];
+  // 过滤掉助词
+  for (const item of items_) {
+    if (item['pos'] !== 'u') items.push(item);
+  }
+  // 获取各个元素
+  for (let i = 0; i < items.length; ++i) {
+    const item = items[i];
+    // location
+    if (item['ne'] ===  'LOC' || item['pos'] === 's') {
+      result.location = item['item'];
+    }
+  }
+  return result;
+}
+
 //getWeather("白城", 0);
 exports = module.exports = {
   getWeather,
   isToday,
+  analyseItems,
 };

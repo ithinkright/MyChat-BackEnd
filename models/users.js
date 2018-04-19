@@ -74,5 +74,5 @@ exports = module.exports = {
     insertUser,
     showTable,
     findUserById,
-    findUserByObj
-}
+    findUserByObj,
+};

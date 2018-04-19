@@ -9,7 +9,7 @@ async function unifyError(ctx, next) {
         if (err instanceof MyChatError) {
             sendRes(ctx, {}, 400, err.code, err.message)
         } else {
-            sendRes(ctx, {}, 500, err.message, '服务端未明确错误(参数缺少,参数为空,主键重复等)')
+            sendRes(ctx, {}, 500, err.message, '呀！服务端出错了');
         }
     }
 }

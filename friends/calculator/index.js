@@ -7,12 +7,14 @@ const help = '抱歉，我解析不了该表达式';
 
 io.on('connection', (socket) => {
   socket.on('hello', (data) => {
-    console.log(data);
+    console.log('calculator', 'hello', data);
   });
 
   socket.on('message', (data) => {
-    console.log(data);
-    const { message } = data;
+    console.log('calculator', 'message', data);
+    let { message } = data;
+    message = message.replace('×', '*');
+    message = message.replace('÷', '/');
     try {
       const result = api.compute(message);
       socket.emit('message', { message: result.toString() });

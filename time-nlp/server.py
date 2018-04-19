@@ -15,7 +15,8 @@ def time_nlp():
   data = request.get_data()
   param = json.loads(data.decode('utf-8'))
   time = param['time']
-  parse_res = json.loads(tn.parse(target=time))
+  base = param['base']
+  parse_res = json.loads(tn.parse(target=time, timeBase=base))
   res = {}
   res['time'] = time
   res['result'] = parse_res

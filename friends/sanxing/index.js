@@ -4,13 +4,13 @@ const db = require('./db');
 const config = require('../config');
 
 const users = {};
-const hello = `嗨我是小醒，灵感来自上一届创新赛的\"三醒\"。我每天会主动问你三个问题，请畅所欲言吧～`;
+const hello = `嗨我是小醒，灵感来自上一届创新赛的\"三醒\"。\n\n我每天会主动问你三个问题，然后我会尝试从你的回答里进行分析，希望能越来越了解你，请畅所欲言吧～`;
 
 const io = require('socket.io')(server, config.io);
 
 io.on('connection', (socket) => {
   socket.on('hello', async (data) => {
-    console.log(data);
+    console.log('sanxing', 'hello', data);
     const { userid } = data;
     const [user] = await db.findUserById(userid);
     if (!user) {
@@ -42,7 +42,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('message', async (data) => {
-    console.log(data);
+    console.log('sanxing', 'message', data);
     const { userid, message } = data;
     console.log(users[userid]);
     if (users[userid].question_number < 3) {

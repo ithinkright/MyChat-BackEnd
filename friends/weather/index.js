@@ -11,7 +11,7 @@ const io = require('socket.io')(server, config.io);
 
 io.on('connection', (socket) => {
   socket.on('hello', async (data) => {
-    console.log(data);
+    console.log('weather', 'hello', data);
     const { userid } = data;
     const [user] = await db.findUserById(userid);
     if (!user) {
@@ -34,21 +34,19 @@ io.on('connection', (socket) => {
   });
 
   socket.on('message', async (data) => {
-    console.log(data);
+    console.log('weather', 'message', data);
     const { userid, message } = data;
-    let flag, location;
-    if (message.indexOf('未来') !== -1 || message.indexOf('预') !== -1) {
+    const items = await lexicalAnalyse(message);
+    const result = api.analyseItems(items);
+    const location = result.location;
+    let flag = 1;
+    if (message.indexOf('未来') !== -1 || message.indexOf('预') !== -1 || message.indexOf('接下来') !== -1)
       flag = 0;
-      const result = await lexicalAnalyse(message);
-      location = result.location;
-    } else {
-      flag = 1;
-      location = message;
-    }
     const user = users[userid];
     const is_new_user = user.location === null;
     if (is_new_user) {
       users[userid].location = location;
+      db.updateLocation(userid, location);
     }
     const weather = await api.getWeather(location, flag);
     socket.emit('message', { message: weather });

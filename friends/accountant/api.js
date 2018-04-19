@@ -1,13 +1,3 @@
-const { sendMessages } = require('../../services/socket.io');
-
-function remind(friendid, userid, time, message) {
-  const ms = time.getTime() - new Date().getTime();
-  setTimeout(() => {
-    const messages = [message];
-    sendMessages(friendid, userid, messages);
-  }, ms);
-}
-
 function analyseItems(items_) {
   const result = {};
   const items = [];
@@ -18,19 +8,26 @@ function analyseItems(items_) {
   // 获取各个元素
   for (let i = 0; i < items.length; ++i) {
     const item = items[i];
-    // event
-    if (item['pos'] === 'v') {
-      result.event = item['item'];
-    }
     // date
     if (item['ne'] === 'TIME' || item['pos'] === 't') {
       result.time = item['item'];
+    }
+    // event
+    if (item['pos'] === 'v' && !result.event) {
+      result.event = item['item'];
+    }
+    // item
+    if (item['pos'] === 'n') {
+      result.item = item['item'];
+    }
+    // amount
+    if (item['pos'] === 'm') {
+      result.amount = item['item'];
     }
   }
   return result;
 }
 
 exports = module.exports = {
-  remind,
   analyseItems,
 };

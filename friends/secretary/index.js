@@ -6,14 +6,14 @@ const config = require('../config');
 const { lexicalAnalyse, timeNlp } = require('../nlp');
 
 const users = {};
-const hello = 'Hello，恭喜你 get 小秘书一枚～对我说\"提醒我 XX 去 XX\"可以帮你设置提醒事项。另外，\"查询 XX 的日程\"可以查询日程';
-const help = '啊，小秘太傻了，get 不到你的意思。不过你可以这样跟我聊天：\"提醒我 XX 去开会\"可以设置提醒事项；另外，\"查询 XX 的日程\"可以查询日程';
+const hello = 'Hello，恭喜你 get 小秘书一枚～\n\n对我说\"提醒我 XX 去 XX\"可以帮你设置提醒事项。\n\n另外，\"查询 XX 的日程\"可以查询日程';
+const help = '啊，小秘太傻了，get 不到你的意思。\n\n不过你可以这样跟我说：\"提醒我 XX 去开会\"可以设置提醒事项；另外，\"查询 XX 的日程\"可以查询日程';
 
 const io = require('socket.io')(server, config.io);
 
 io.on('connection', (socket) => {
   socket.on('hello', async (data) => {
-    console.log(data);
+    console.log('secretary', 'hello', data);
     const { userid, friendid } = data;
     const [user] = await db.findUserById(userid);
     if (!user) {
@@ -24,17 +24,19 @@ io.on('connection', (socket) => {
   });
 
   socket.on('message', async (data) => {
-    console.log(data);
+    console.log('secretary', 'message', data);
     const { userid, message } = data;
     let result, times;
     try {
-      result = await lexicalAnalyse(message);
+      const items = await lexicalAnalyse(message);
+      result = api.analyseItems(items);
       times = await timeNlp(message);
       if (times.length === 0) {
         socket.emit('message', { message: 'Sorry，我 get 不到你要我提醒你什么' });
         return;
       }
     } catch (err) {
+      console.log(err);
       socket.emit('message', { message: help });
       return;
     }
@@ -75,7 +77,7 @@ io.on('connection', (socket) => {
       }
     } else if (message.indexOf('计时') !== -1) {
       const friendid = users[userid].friendid;
-      api.remind(friendid, userid, times[0], `倒计时${result.date}到啦`);
+      api.remind(friendid, userid, times[0], `倒计时${result.time}到啦`);
       socket.emit('message', { message: '好的，到时提醒你' });
     } else {
       socket.emit('message', { message: help });
