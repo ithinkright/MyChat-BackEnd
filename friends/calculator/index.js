@@ -12,7 +12,9 @@ io.on('connection', (socket) => {
 
   socket.on('message', (data) => {
     console.log('calculator', 'message', data);
-    const { message } = data;
+    let { message } = data;
+    message = message.replace('×', '*');
+    message = message.replace('÷', '/');
     try {
       const result = api.compute(message);
       socket.emit('message', { message: result.toString() });
