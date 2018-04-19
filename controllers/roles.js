@@ -1,5 +1,6 @@
 const { rolesModel, attributesModel } = require('../models');
 const { MyChatError, pick, sendRes } = require('../services/MyChatUtils');
+const { rolesData } = require('../data/index');
 const md5 = require('md5')
 
 async function addRole (ctx, next) {
@@ -35,8 +36,20 @@ async function getAllRoles(ctx, next) {
     return next();
 }
 
+async function insertOriginRoles () {
+    let data = rolesData.data;
+    for (e in data) {
+        data[e].roleid= md5(data[e].name);
+        let [result] = await rolesModel.findRoleById(data[e]);
+        if (!result) {
+            await rolesModel.insertRole(data[e]);
+        }
+    }
+}
+
 exports = module.exports = {
     addRole,
     deleteRole,
-    getAllRoles
+    getAllRoles,
+    insertOriginRoles
 }

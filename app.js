@@ -10,7 +10,7 @@ const queryDB = require('./services/db');
 const compute = require('./services/Compute/index');
 const translate = require('./services/Translator/youdao');
 const { getOriginFrends } = require('./controllers/friends');
-const { attributesCtrl } = require('./controllers/index');
+const { attributesCtrl,rolesCtrl } = require('./controllers/index');
 require('./friends');
 require('./services/apns');
 
@@ -29,6 +29,7 @@ require('./services/apns');
     console.log(`服务端程序正在监听3000端口`);
     await createDataBase();
     await attributesCtrl.insertOriginAttributes();
+    await rolesCtrl.insertOriginRoles();
     //await getOriginFrends("21633e8138c5669902a4bed40ec6516b");
     //await testSql();
   } catch (err) {
