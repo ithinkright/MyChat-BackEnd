@@ -28,7 +28,7 @@ io.on('connection', (socket) => {
     let dates;
     try { dates = await timeNlp(message); }
     catch (err) { dates = [new Date()]; }
-    if (api.isQuestion(message) && result.date) {
+    if (api.isQuestion(message) && result.time) {
       let diaries;
       if (dates.length === 1) {
         const date = dates[0];
@@ -39,10 +39,10 @@ io.on('connection', (socket) => {
         diaries = await db.findDiaryByDates(userid, before, after);
       }
       if (diaries.length === 0) {
-        socket.emit('message', { message: `Sorry，查不到${result.date}你做了什么` });
+        socket.emit('message', { message: `Sorry，查不到${result.time}你做了什么` });
         return;
       }
-      const messages = [`这是你在${result.date}的日记👇`];
+      const messages = [`这是你在${result.time}的日记👇`];
       for (const diary of diaries) {
         messages.push(diary.origin);
       }

@@ -24,7 +24,7 @@ function analyseItems(items_) {
     }
     // date
     if (item['ne'] === 'TIME' || item['pos'] === 't') {
-      result.date = item['item'];
+      result.time = item['item'];
     }
   }
   return result;

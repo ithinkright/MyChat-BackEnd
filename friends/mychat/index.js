@@ -23,7 +23,7 @@ io.on('connection', (socket) => {
   socket.on('message', async (data) => {
     console.log(data);
     const { userid, message } = data;
-    if (isMyChater(userid)) {
+    if (api.isMyChater(userid)) {
       const pos = message.indexOf(' ');
       const adviceid = message.substr(0, pos);
       if (message.length <= pos+1) {

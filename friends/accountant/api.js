@@ -10,11 +10,15 @@ function analyseItems(items_) {
     const item = items[i];
     // date
     if (item['ne'] === 'TIME' || item['pos'] === 't') {
-      result.date = item['item'];
+      result.time = item['item'];
     }
     // event
     if (item['pos'] === 'v' && !result.event) {
       result.event = item['item'];
+    }
+    // item
+    if (item['pos'] === 'n') {
+      result.item = item['item'];
     }
     // amount
     if (item['pos'] === 'm') {

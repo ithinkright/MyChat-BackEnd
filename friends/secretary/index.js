@@ -77,7 +77,7 @@ io.on('connection', (socket) => {
       }
     } else if (message.indexOf('计时') !== -1) {
       const friendid = users[userid].friendid;
-      api.remind(friendid, userid, times[0], `倒计时${result.date}到啦`);
+      api.remind(friendid, userid, times[0], `倒计时${result.time}到啦`);
       socket.emit('message', { message: '好的，到时提醒你' });
     } else {
       socket.emit('message', { message: help });

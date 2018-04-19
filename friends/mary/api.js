@@ -19,7 +19,7 @@ function analyseItems(items_) {
     const item = items[i];
     // date
     if (item['ne'] === 'TIME' || item['pos'] === 't') {
-      result.date = item['item'];
+      result.time = item['item'];
     }
     // location
     if (item['ne'] ===  'LOC' || item['pos'] === 's') {

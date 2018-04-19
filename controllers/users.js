@@ -125,6 +125,7 @@ async function deleteAttributes(ctx, next) {
 
 async function insertOriginAttributesForUser(userid) {
     let data = attributesData.data;
+    console.log(data);
     for (e in data) {
         let [attribute] = await attributesModel.findAttributeByObj({ name: data[e].name });
         users_attributesModel.insertUsersAttribute({ userid: userid, attributeid: attribute.attributeid });

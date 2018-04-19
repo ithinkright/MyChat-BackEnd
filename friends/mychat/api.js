@@ -1,8 +1,16 @@
+const md5 = require('md5');
 const db = require('./db');
 const { sendMessages } = require('../../services/socket.io');
 const { findFriendByAttributename } = require('../../models/friends');
 
+const our_emails = [
+  'painterdrown@hotmail.com',
+];
+
 const mychaters = [];
+for (const e in our_emails) {
+  mychaters.push(md5(e.toLowerCase()));
+}
 
 function isMyChater(userid) {
   return mychaters.includes(userid);
@@ -26,6 +34,7 @@ async function sendToMyChater(advice_id, advice) {
 }
 
 exports = module.exports = {
+  isMyChater,
   sendToUser,
   sendToMyChater,
 };

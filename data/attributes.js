@@ -1,39 +1,54 @@
 
 data = [
   {
-      name: "translate",
+      name: "translator",
       description: "翻译",
-      usercount: "33333"
+      usercount: 0
   },
   {
-      name: "compute",
+      name: "calculator",
       description: "给我一个支点我能撬动整个地球",
-      usercount: "6666"
+      usercount: 0,
   },
   {
-      name: "email",
+      name: "postman",
       description: "连接你和我",
-      usercount: "33333"
+      usercount: 0,
   },
   {
       name: "secretary",
       description: "记录生活的美好",
-      usercount: "20000"
+      usercount: 0,
   },
   {
-      name: "Weather",
+      name: "weather",
       description: "查询天气",
-      usercount: "33333"
+      usercount: 0,
   },
   {
-      name: "Mary",
+      name: "mary",
       description: "汤姆和玛丽",
-      usercount: "11111"
+      usercount: 0
   },
   {
-      name: "SanXing",
+      name: "sanxing",
       description: "每天三个问题",
-      usercount: 10000
+      usercount: 0
+  },
+  {
+      name: 'express',
+      description: '帮你光速查快递',
+      usercount: 0
+  },
+  {
+    name: 'mychat',
+    description: '来自 MyChat 的客服小姐姐小哥哥',
+    usercount: 0
+  },
+  {
+    name: 'accountant',
+    description: '您的专属会计',
+    usercount: 0
   }
 ]
 

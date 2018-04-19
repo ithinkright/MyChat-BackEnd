@@ -56,7 +56,6 @@ async function timeNlp(message) {
       ret.push(after);
     }
   }
-  console.log(ret);
   return ret;
 }
 
