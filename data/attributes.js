@@ -1,32 +1,32 @@
 
 data = [
   {
-      name: "email",
+      name: "postman",
       description: "连接你和我",
-      usercount: "33333"
+      usercount: 0,
   },
   {
-      name: "Weather",
+      name: "weather",
       description: "查询天气",
-      usercount: "33333"
+      usercount: 0,
   },
   {
       name: "mychat",
       description: "mychat",
-      usercount: "150000"
+      usercount: 0,
   },
   {
       name: "express",
       description: "query express",
-      usercount: "19990"
+      usercount: 0,
   },
   {
       name: "accountant",
       description: "account",
-      usercount: "150000"
+      usercount: 0,
   },
   {
-      name: "compute",
+      name: "calculator",
       description: "给我一个支点我能撬动整个地球",
       usercount: 0,
   },
@@ -36,14 +36,14 @@ data = [
       usercount: 0,
   },
   {
-      name: "default",
-      description: "default attribute",
-      usercount: "19990"
+      name: "gakki",
+      description: "gakki attribute",
+      usercount: 0,
   },
   {
-      name: "SanXing",
+      name: "sanxing",
       description: "每天三个问题",
-      usercount: 10000
+      usercount: 0,
   },
   {
       name: "mary",
@@ -51,9 +51,9 @@ data = [
       usercount: 0
   },
   {
-      name: "translate",
+      name: "translator",
       description: "翻译",
-      usercount: "33333"
+      usercount: "0"
   }
 ]
 

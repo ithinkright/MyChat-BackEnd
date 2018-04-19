@@ -5,31 +5,31 @@ const { findFriendByAttributename } = require('../../models/friends');
 
 const our_emails = [
   'painterdrown@hotmail.com',
+  '2364194350@qq.com',
 ];
 
 const mychaters = [];
-for (const e in our_emails) {
+for (const e of our_emails) {
   mychaters.push(md5(e.toLowerCase()));
 }
+console.log(mychaters);
 
 function isMyChater(userid) {
   return mychaters.includes(userid);
 }
 
-async function sendToUser(advice_id, response) {
-  const [advice] = await db.findAdvice(advice_id);
-  if (!advice) return;
-  const { userid } = advice;
+async function sendToUser(userid, response) {
   const [friend] = await findFriendByAttributename(userid, 'mychat');
+  console.log(friend);
   if (!friend) return;
-  sendMessages(friend.friendid, userid, [response]);
+  sendMessages(`${friend.friendid}`, userid, [response]);
 }
 
-async function sendToMyChater(advice_id, advice) {
-  for (const userid of mychaters) {
-    const [friend] = await findFriendByAttributename(userid, 'mychat');
+async function sendToMyChater(userid, advice) {
+  for (const u of mychaters) {
+    const [friend] = await findFriendByAttributename(u, 'mychat');
     if (!friend) continue;
-    sendMessages(friend.friendid, userid, [advice]);
+    sendMessages(`${friend.friendid}`, u, [`${userid}\n${advice}`]);
   }
 }
 

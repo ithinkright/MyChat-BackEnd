@@ -19,9 +19,9 @@ function createAdvice(userid, time, advice) {
   return queryDb(sql, values);
 }
 
-function updateResponse(adviceid, response) {
-  const sql = `UPDATE advice SET response = ? WHERE adviceid = ?;`;
-  const values = [response, adviceid];
+function findAdvice(adviceid) {
+  const sql = `SELECT * FROM advice WHERE adviceid = ?;`;
+  const values = [adviceid];
   return queryDb(sql, values);
 }
 
@@ -29,5 +29,5 @@ exports = module.exports = {
   findUserById,
   createUser,
   createAdvice,
-  updateResponse,
+  findAdvice,
 };
