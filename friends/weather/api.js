@@ -16,6 +16,16 @@ let map = new Map([
   ['大雨', '🌧大雨'],
   ['小雨', '🌦小雨'],
 ]);
+
+let map1 = new Map([
+  ['运动', '运动🏃🚴‍⛹️‍🤾‍'],
+  ['旅游', '旅游🏝🛳⛱'],
+  ['衣物', '衣物👚👕👗'],
+  ['情侣们', '情侣们💑👫💑'],
+  ['洗车', '洗车🚗🚕🛵'],
+  ['感冒', '感冒🤧😷'],
+  ['太阳', '太阳☀️🌞☀️']
+])
 // 1JINTIAN  0 WEILAI
 async function getWeather(place, flag) {
   try {
@@ -42,6 +52,9 @@ function stringifyWeather(obj, flag) {
     }
     str += `\n此外，偷偷告诉你哦，`;
     let num = Math.floor(Math.random() * 10)
+    for (let item of map1.entries()) {
+      obj.zhishus.zhishu[num].detail = obj.zhishus.zhishu[num].detail.replace(item[0], item[1]);
+    }
     str += obj.zhishus.zhishu[num].detail;
   } else {
     str = `未来五天天气预报如下:\n`;
