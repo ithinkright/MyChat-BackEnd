@@ -49,7 +49,7 @@ data = [
       roleid: "e1cbdf31fe7ba25d56d567ba210372b3"
   },
   {
-      friendname: "我的客服",
+      friendname: "Miss. MyChat",
       gender: "female",
       birth: (new Date()).toLocaleDateString(),
       roleid: "7cae0e79bdcf71dfd512f1100219fdbc"

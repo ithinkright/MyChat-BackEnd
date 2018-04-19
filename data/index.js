@@ -1,4 +1,5 @@
 exports = module.exports = {
     friendsData: require('./friends'),
-    attributesData: require('./attributes')
+    attributesData: require('./attributes'),
+    rolesData: require('./roles')
 }
