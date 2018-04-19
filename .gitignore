@@ -1,7 +1,3 @@
-#packet.json
-package.json
-package-lock.json
-
 # Logs
 logs
 *.log
@@ -65,14 +61,12 @@ typings/
 # dotenv environment variables file
 .env
 
-# VS Code
 .vscode
-
-# python cache
 time-nlp/__pycache__
-
 test.js
 package-lock.json
-
 public/avatar/
 public/friendAvatar/
+nohup.out
+time-nlp/TimeNormalizer.pyc
+package-lock.json
