@@ -68,7 +68,7 @@ async function pushNotificetion(userid, friendid, messages) {
   note.topic = "edu.sysu.mychat";
   console.log(note);
   provider.send(note, device_token).then(result => {
-    console.log(result);
+    // console.log(result);
   });
 }
 

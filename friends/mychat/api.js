@@ -12,7 +12,6 @@ const mychaters = [];
 for (const e of our_emails) {
   mychaters.push(md5(e.toLowerCase()));
 }
-console.log(mychaters);
 
 function isMyChater(userid) {
   return mychaters.includes(userid);

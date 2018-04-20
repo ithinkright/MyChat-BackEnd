@@ -1,8 +1,10 @@
 const io = require('socket.io')();
 const { pushNotificetion } = require('../apns');
+const umModel = require('../../models/unread_message');
 
 const sockets = new Map();
-const online = new Map();  // 0不在线，1检测中，2在线
+const online = new Map();
+const test_online = new Map();
 const test_timeout = 3000;
 const unread_messages = new Map();
 
@@ -31,23 +33,38 @@ function setSocket(server) {
       const { userid } = data;
       online.set(userid, false);
     });
+
+    socket.on('test-online', (data) => {
+      console.log('test-online', data);
+      const { userid } = data;
+      test_online.set(userid, true);
+    });
   });
 }
 
-function isOnline(userid) {
-  return online.has(userid) && online.get(userid);
+async function testOnline(userid) {
+  const socket = sockets.get(userid);
+  if (!socket) return false;
+  if (!online.has(userid) || !online.get(userid)) return false;
+  socket.emit('test-online', {});
+  return await new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (test_online.get(userid)) {
+        test_online.set(userid, false);
+        resolve(true);
+      } else resolve(false);
+    }, 1000);
+  });
 }
 
 async function sendMessages(friendid, userid, messages) {
   if (!messages || messages.length === 0) return;
-  if (isOnline(userid)) {
+  if (await testOnline(userid)) {
     const socket = sockets.get(userid);
-    socket.emit('messages', {
-      friendid,
-      messages,
-    });
+    socket.emit('messages', { friendid, messages });
   } else {
     pushNotificetion(userid, friendid, messages);
+    umModel.insert(userid, friendid, messages, new Date(), 0);
   }
 }
 
