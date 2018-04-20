@@ -136,9 +136,9 @@ async function insertOriginAttributesForUser(userid) {
 
 async function saveDeviceToken(ctx, next) {
     const { userid, device_token } = ctx.param;
-    const [device_token] = await dtModel.findDeviceToken(userid);
-    if (device_token) await dtModel.updateDeviceToken(userid, token, new Date());
-    else await dtModel.saveDeviceToken(userid, token, new Date());
+    const [device_token_] = await dtModel.findDeviceToken(userid);
+    if (device_token_) await dtModel.updateDeviceToken(userid, device_token, new Date());
+    else await dtModel.saveDeviceToken(userid, device_token, new Date());
     sendRes(ctx, {});
     return next();
 }
