@@ -58,6 +58,12 @@ function updateFetched(umids) {
   return queryDB(sql, values);
 }
 
+function count(userid) {
+  const sql = `select count(*) from unread_message where userid = ?;`;
+  const values = [userid];
+  return queryDB(sql, values);
+}
+
 exports = module.exports = {
   createUnreadMessageTable,
   insert,
@@ -65,4 +71,5 @@ exports = module.exports = {
   findByUseridAndFriendid,
   deleteByFriendid,
   updateFetched,
+  count,
 };

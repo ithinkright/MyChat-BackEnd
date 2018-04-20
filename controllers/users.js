@@ -6,7 +6,7 @@ const { attributesData } = require('../data/index')
 const { MyChatError, pick, sendRes, utils } = require('../services/MyChatUtils/')
 const MyChatSendMail = require('../services/Mail/sendMail');
 const weather = require('./weather')
-const { saveDeviceToken: saveDT, decreaseBadge } = require('../services/apns');
+const dtModel = require('../models/device_token');
 
 async function uploadAvatar(ctx, next) {
     ctx.param = Object.assign(ctx.param, ctx.req.body);
@@ -136,14 +136,10 @@ async function insertOriginAttributesForUser(userid) {
 
 async function saveDeviceToken(ctx, next) {
     const { userid, device_token } = ctx.param;
-    await saveDT(userid, device_token);
+    const [device_token] = await dtModel.findDeviceToken(userid);
+    if (device_token) await dtModel.updateDeviceToken(userid, token, new Date());
+    else await dtModel.saveDeviceToken(userid, token, new Date());
     sendRes(ctx, {});
-    return next();
-}
-
-function deleteBadge(ctx, next) {
-    const { userid, delta } = ctx.param;
-    decreaseBadge(userid, delta);
     return next();
 }
 
@@ -156,5 +152,4 @@ exports = module.exports = {
     addAttributes,
     deleteAttributes,
     saveDeviceToken,
-    deleteBadge,
 };

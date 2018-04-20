@@ -46,11 +46,11 @@ async function testOnline(userid) {
   const socket = sockets.get(userid);
   if (!socket) return false;
   if (!online.has(userid) || !online.get(userid)) return false;
+  test_online.set(userid, false);
   socket.emit('test-online', {});
   return await new Promise((resolve, reject) => {
     setTimeout(() => {
       if (test_online.get(userid)) {
-        test_online.set(userid, false);
         resolve(true);
       } else resolve(false);
     }, 1000);
