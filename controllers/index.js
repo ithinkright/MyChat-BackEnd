@@ -5,5 +5,6 @@ exports = module.exports = {
     rolesCtrl: require('./roles'),
     dealMessageCtrl: require('./dealMessage'),
     friends_attributesCtrl: require('./friends_attributes'),
-    friends_rolesCtrl: require('./friends_roles')
-}
+    friends_rolesCtrl: require('./friends_roles'),
+    umCtrl: require('./unread_message'),
+};

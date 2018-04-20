@@ -63,6 +63,7 @@ async function lexicalAnalyse(message) {
   const url = `https://aip.baidubce.com/rpc/2.0/nlp/v1/lexer?access_token=${access_token}&charset=UTF-8`;
   const res = await axios.post(url, { text: message });
   const data = res.data;
+  if (!data) throw new Error('语法分析出错');
   if (data.error_code) throw new Error(data.error_msg);
   return data.items;
 }

@@ -40,8 +40,12 @@ io.on('connection', (socket) => {
     const result = api.analyseItems(items);
     const location = result.location;
     let flag = 1;
-    if (message.indexOf('未来') !== -1 || message.indexOf('预') !== -1 || message.indexOf('接下来') !== -1)
-      flag = 0;
+    if (
+      message.indexOf('未来') !== -1 ||
+      message.indexOf('预') !== -1 ||
+      message.indexOf('接下来') !== -1 ||
+      message.indexOf('过几天') !== -1
+    ) flag = 0;
     const user = users[userid];
     const is_new_user = user.location === null;
     if (is_new_user) {

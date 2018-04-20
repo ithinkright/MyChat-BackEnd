@@ -69,7 +69,13 @@ io.on('connection', (socket) => {
     } else {
       // 记账
       let { time, event, amount, item } = result;
+      if (!event || !amount) {
+        socket.emit('message', { message: 'Sorry，get 不到🤣' });
+        return;
+      }
+      if (!time) time = new Date();
       if (item) event += item;
+      amount = parseFloat(amount);
       db.createAccount(userid, dates[0], event, amount);
       socket.emit('message', { message: '👌帮你记下了' });
     }

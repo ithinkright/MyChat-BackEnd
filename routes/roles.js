@@ -8,4 +8,5 @@ router.get('/', rolesCtrl.getAllRoles)
 router.post('/', rolesCtrl.addRole)
 
 router.delete('/', rolesCtrl.deleteRole)
+
 exports = module.exports = router

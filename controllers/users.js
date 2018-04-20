@@ -1,10 +1,10 @@
+const md5 = require('md5');
+const fs = require('fs');
 const { usersModel, attributesModel, users_attributesModel } = require('../models')
 const { insertOriginFrendsForUser } = require('./friends')
 const { attributesData } = require('../data/index')
 const { MyChatError, pick, sendRes, utils } = require('../services/MyChatUtils/')
 const MyChatSendMail = require('../services/Mail/sendMail');
-const fs = require('fs');
-const md5 = require('md5')
 const weather = require('./weather')
 const { saveDeviceToken: saveDT, decreaseBadge } = require('../services/apns');
 
@@ -36,6 +36,7 @@ async function gainWeather(ctx, next) {
 async function signup(ctx, next) {
     let user = pick(ctx.param, ['username', 'password']);
     user.username = user.username.toLowerCase();
+    user.password = md5(user.password)
     user.userid = md5(user.username);
     let [result] = await usersModel.findUserById({ userid: user.userid });
     if (result) {
@@ -57,6 +58,7 @@ async function signup(ctx, next) {
 async function signin(ctx, next) {
     let user = pick(ctx.param, ['username', 'password']);
     user.username = user.username.toLowerCase()
+    user.password = md5(user.password)
     let [result] = await usersModel.findUserByObj({ username: user.username })
     if (!result) {
         throw new MyChatError(2, '用户名不存在');
