@@ -23,9 +23,6 @@ async function showTable() {
         if (res.length === 0)
             flag = false;
     });
-    if (flag) {
-      console.log("users_friends table exits")
-    }
     return flag;
 }
 

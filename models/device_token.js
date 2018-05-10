@@ -26,9 +26,6 @@ async function showTable() {
         if (res.length === 0)
             flag = false;
     });
-    if (flag) {
-      console.log("device_token table exits")
-    }
     return flag;
 }
 

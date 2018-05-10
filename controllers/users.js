@@ -1,12 +1,12 @@
+const md5 = require('md5');
+const fs = require('fs');
 const { usersModel, attributesModel, users_attributesModel } = require('../models')
 const { insertOriginFrendsForUser } = require('./friends')
 const { attributesData } = require('../data/index')
 const { MyChatError, pick, sendRes, utils } = require('../services/MyChatUtils/')
 const MyChatSendMail = require('../services/Mail/sendMail');
-const fs = require('fs');
-const md5 = require('md5')
 const weather = require('./weather')
-const { saveDeviceToken: saveDT, decreaseBadge } = require('../services/apns');
+const dtModel = require('../models/device_token');
 
 async function uploadAvatar(ctx, next) {
     ctx.param = Object.assign(ctx.param, ctx.req.body);
@@ -36,6 +36,7 @@ async function gainWeather(ctx, next) {
 async function signup(ctx, next) {
     let user = pick(ctx.param, ['username', 'password']);
     user.username = user.username.toLowerCase();
+    user.password = md5(user.password)
     user.userid = md5(user.username);
     let [result] = await usersModel.findUserById({ userid: user.userid });
     if (result) {
@@ -57,6 +58,7 @@ async function signup(ctx, next) {
 async function signin(ctx, next) {
     let user = pick(ctx.param, ['username', 'password']);
     user.username = user.username.toLowerCase()
+    user.password = md5(user.password)
     let [result] = await usersModel.findUserByObj({ username: user.username })
     if (!result) {
         throw new MyChatError(2, '用户名不存在');
@@ -134,14 +136,10 @@ async function insertOriginAttributesForUser(userid) {
 
 async function saveDeviceToken(ctx, next) {
     const { userid, device_token } = ctx.param;
-    await saveDT(userid, device_token);
+    const [device_token_] = await dtModel.findDeviceToken(userid);
+    if (device_token_) await dtModel.updateDeviceToken(userid, device_token, new Date());
+    else await dtModel.saveDeviceToken(userid, device_token, new Date());
     sendRes(ctx, {});
-    return next();
-}
-
-function deleteBadge(ctx, next) {
-    const { userid, delta } = ctx.param;
-    decreaseBadge(userid, delta);
     return next();
 }
 
@@ -154,5 +152,4 @@ exports = module.exports = {
     addAttributes,
     deleteAttributes,
     saveDeviceToken,
-    deleteBadge,
 };

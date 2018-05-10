@@ -63,7 +63,8 @@ typings/
 .vscode
 time-nlp/__pycache__
 test.js
-public/avatar/
-public/friendAvatar/
+public/avatar/*.jpg
+public/friendAvatar/*.jpg
 nohup.out
 time-nlp/TimeNormalizer.pyc
+logs/

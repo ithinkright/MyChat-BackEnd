@@ -33,6 +33,7 @@ io.on('connection', (socket) => {
         return;
       }
       const userid_ = message.substr(posa+1, posb-1);
+      console.log('***************', userid_, userid_.length);
       const response = message.substr(posb+1);
       socket.emit('message', { message: '👌已转发给提建议的那个用户了' });
       api.sendToUser(userid_, response);
