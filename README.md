@@ -1,5 +1,5 @@
 # MyChat-BackEnd
-A project for MyChat to take part in software game
+A project for MyChat to take part in software game(BackEnd)
 
 #### Code Structure
 
